@@ -1,0 +1,90 @@
+{% extends "brgy_employees/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Barangay Program Management</h4>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="#">Programs</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Barangay Programs</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>Program No.</th>
+                                    <th>Title</th>
+                                    <th>Date Implemented</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Program-24-02-23-0001</td>
+                                    <td>Community Feeding Program</td>
+                                    <td>January 10, 2024</td>
+                                    <td><span class="badge badge-success">Ongoing</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Program-24-02-23-0002</td>
+                                    <td>Barangay Clean-Up Drive</td>
+                                    <td>February 5, 2024</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Program-24-02-23-0003</td>
+                                    <td>Livelihood Training for Residents</td>
+                                    <td>March 12, 2024</td>
+                                    <td><span class="badge badge-warning">Upcoming</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Program-24-02-23-0004</td>
+                                    <td>Medical Mission for Senior Citizens</td>
+                                    <td>April 20, 2024</td>
+                                    <td><span class="badge badge-success">Ongoing</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Program-24-02-23-0005</td>
+                                    <td>Youth Sports Development Program</td>
+                                    <td>May 15, 2024</td>
+                                    <td><span class="badge badge-danger">Cancelled</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Program-24-02-23-0006</td>
+                                    <td>Free Vaccination Drive</td>
+                                    <td>June 10, 2024</td>
+                                    <td><span class="badge badge-warning">Upcoming</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Program No.</th>
+                                    <th>Title</th>
+                                    <th>Date Implemented</th>
+                                    <th>Status</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load static %}
+<div class="quixnav">
+    <div class="quixnav-scroll">
+        <ul class="metismenu" id="menu">
+            <li class="nav-label first">Main Menu</li>
+            <li><a href="{% url 'brgy_employees:dashboard'%}" aria-expanded="false"><i class="icon icon-single-04"></i><span
+                class="nav-text">Dashboard</span></a></li>
+           
+            <li class="nav-label">Reports</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-app-store"></i><span class="nav-text">Residents</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'brgy_employees:residents_list'%}">Manage List</a></li>
+                    <li><a href="{% url 'brgy_employees:incidents_reports'%}">Incident Reports</a></li>
+                </ul>
+            </li>
+            <li class="nav-label">Services</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-form"></i><span class="nav-text">Requests</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'brgy_employees:resident_request'%}">Clearance</a></li>
+                </ul>
+            </li>
+            <li class="nav-label">Programs</li>
+            <li><a href="{% url 'brgy_employees:manage_programs'%}" aria-expanded="false"><i class="icon icon-single-04"></i><span
+                class="nav-text">List</span></a></li>
+           
+
+
+            <li class="nav-label">Inventory</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-layout-25"></i><span class="nav-text">Inventory Records</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'brgy_employees:manage_equipments'%}">Equipment</a></li>
+                    <li><a href="{% url 'brgy_employees:manage_supplies'%}">Supplies</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-label">Documents</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-single-copy-06"></i><span class="nav-text">Resolution and Ordinances</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'brgy_employees:employee_resolution'%}">Resolutions</a></li>
+                    <li><a href="{% url 'brgy_employees:employee_ordinance'%}">Ordinances</a></li>
+                   
+                    {% comment %} <li><a href="./page-lock-screen.html">Memorandum</a></li> {% endcomment %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

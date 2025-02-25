@@ -1,0 +1,87 @@
+{% extends "residents/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Submitted Documents</h4>
+                <p class="mb-0">Your Barangay Document Requests</p>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Barangay Services</a></li>
+                <li class="breadcrumb-item active"><a href="#">Submitted Documents</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Submitted Documents Table -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Submitted Requests</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Document Type</th>
+                                    <th>Purpose</th>
+                                    <th>Date Submitted</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample Data -->
+                                <tr>
+                                    <td>1</td>
+                                    <td>Barangay Clearance</td>
+                                    <td>Job Application</td>
+                                    <td>2024-02-10</td>
+                                    <td><span class="badge badge-info">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Business Permit</td>
+                                    <td>New Business Registration</td>
+                                    <td>2024-01-25</td>
+                                    <td><span class="badge badge-success">Approved</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Indigency Certificate</td>
+                                    <td>Scholarship Application</td>
+                                    <td>2024-02-05</td>
+                                    <td><span class="badge badge-warning">Under Review</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Residency Certificate</td>
+                                    <td>Government ID Requirement</td>
+                                    <td>2024-01-30</td>
+                                    <td><span class="badge badge-danger">Rejected</span></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Barangay ID</td>
+                                    <td>Resident Identification</td>
+                                    <td>2024-02-12</td>
+                                    <td><span class="badge badge-info">Pending</span></td>
+                                </tr>
+                                <!-- End Sample Data -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <!-- Header -->
+                <h4>Barangay Equipment Inventory</h4>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                <li class="breadcrumb-item active"><a href="#">Equipment Inventory</a></li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Equipment Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Equipment</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Equipment Name</th>
+                                    <th>Category</th>
+                                    <th>Quantity</th>
+                                    <th>Condition</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Handheld Radio</td>
+                                    <td>Communication</td>
+                                    <td>15</td>
+                                    <td><span class="badge badge-success">Good</span></td>
+                                    <td>Feb 10, 2025</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>First Aid Kit</td>
+                                    <td>Medical</td>
+                                    <td>8</td>
+                                    <td><span class="badge badge-warning">Fair</span></td>
+                                    <td>Jan 15, 2025</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Flashlight</td>
+                                    <td>Emergency</td>
+                                    <td>20</td>
+                                    <td><span class="badge badge-success">Good</span></td>
+                                    <td>Feb 5, 2025</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Generator</td>
+                                    <td>Power Supply</td>
+                                    <td>2</td>
+                                    <td><span class="badge badge-danger">Damaged</span></td>
+                                    <td>Dec 30, 2024</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Fire Extinguisher</td>
+                                    <td>Safety</td>
+                                    <td>10</td>
+                                    <td><span class="badge badge-success">Good</span></td>
+                                    <td>Feb 1, 2025</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Equipment Name</th>
+                                    <th>Category</th>
+                                    <th>Quantity</th>
+                                    <th>Condition</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "brgy_employees/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Hi, welcome back!</h4>
+                <span class="ml-1">Reports and Concerns</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active"><a href="{%url 'brgy_employees:incidents_reports'%}">Conversations</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- Row -->
+    <div class="row">
+        <!-- Chat Sidebar -->
+        <div class="col-lg-3 col-md-4">
+            <div class="card chat-sidebar">
+                <div class="card-body">
+                    <h5 class="mb-4">Reports and Concerns</h5>
+                    <input type="text" class="form-control search-input mb-3" placeholder="Search accounts...">
+                    <ul class="list-group chat-list">
+                        <li class="list-group-item d-flex align-items-center chat-item">
+                            <img src="{% static 'image_sample/mika.jpg' %}" class="chat-avatar">
+                            <div class="chat-info">
+                                <strong>Bini Mika</strong>
+                                <p class="mb-0 text-muted small">Ma'am/sir I have reports here in zone 1...</p>
+                            </div>
+                            {% comment %} <span class="badge badge-primary badge-pill">2</span> {% endcomment %}
+                        </li>
+                        <li class="list-group-item d-flex align-items-center chat-item">
+                            <img src="{% static 'image_sample/colet.jpg' %}" class="chat-avatar">
+                            <div class="chat-info">
+                                <strong>Bini Colet</strong>
+                                <p class="mb-0 text-muted small">pwede pong mag request ng.....</p>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex align-items-center chat-item">
+                            <img src="{% static 'image_sample/maloi.jpg' %}" class="chat-avatar">
+                            <div class="chat-info">
+                                <strong>Bini Maloi</strong>
+                                <p class="mb-0 text-muted small">Good morning Ma'am/Sir Babalik na namin....</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="col-lg-9 col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="{% static 'image_sample/mika.jpg' %}" class="chat-avatar-lg">
+                        <h5 class="mb-0 ml-3" id="chat-user">Bini Mika</h5>
+                    </div>
+                    <button class="btn btn-danger btn-sm">End Chat</button>
+                </div>
+                <div class="card-body chat-box" id="chat-box">
+                    <div class="chat-message received">
+                        <img src="{% static 'image_sample/mika.jpg' %}" class="chat-bubble-avatar">
+                        <div class="chat-bubble">
+                            <p>Ma'am/sir I have reports here in zone 1 medyo nakakaroon ng aberya</p>
+                            <span class="chat-time">10:00 AM</span>
+                        </div>
+                    </div>
+                    <div class="chat-message sent">
+                        <div class="chat-bubble">
+                            <p>Okay papunta na mga tanod namin dyan</p>
+                            <span class="chat-time">10:02 AM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input type="text" id="message-input" class="form-control" placeholder="Type a message...">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" id="send-button"><i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Sidebar Styles */
+    .chat-sidebar {
+        height: 100%;
+        border-right: 1px solid #ddd;
+    }
+    .chat-avatar {
+        width: 40px; 
+        height: 40px;
+        border-radius: 50%; 
+        object-fit: cover; 
+        border: 2px solid #ddd; 
+    }
+    .chat-avatar-lg {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #ddd;
+    }
+    .chat-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .chat-item {
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .chat-item:hover {
+        background-color: #f5f5f5;
+    }
+    .chat-box {
+        height: 450px;
+        overflow-y: auto;
+        padding: 15px;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+    }
+    .chat-message {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 15px;
+    }
+    .chat-message.sent {
+        justify-content: flex-end;
+    }
+    .chat-bubble {
+        max-width: 60%;
+        padding: 10px;
+        border-radius: 15px;
+        position: relative;
+    }
+    .chat-message.received .chat-bubble {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+    }
+    .chat-message.sent .chat-bubble {
+        background-color: #007bff;
+        color: white;
+        text-align: right;
+    }
+    .chat-time {
+        display: block;
+        font-size: 12px;
+        margin-top: 5px;
+        color: black;
+    }
+    .chat-bubble-avatar {
+        width: 35px; 
+        height: 35px; 
+        border-radius: 50%;
+        object-fit: cover;  
+        min-width: 35px; 
+        min-height: 35px; 
+        margin-right: 10px;
+        border: 2px solid #ddd;
+    }
+</style>
+{% endblock %}

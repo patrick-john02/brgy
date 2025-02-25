@@ -1,0 +1,140 @@
+{% extends "residents/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Barangay Clearance Request</h4>
+                <p class="mb-0">Please read the description below before filling out the form.</p>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'residents:barangay_clearance' %}">Barangay Clearance</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Barangay Clearance Description -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>About Barangay Clearance</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Purposes of Barangay Clearance:</strong></p>
+                    <ul>
+                        <li>Certifies good moral character and honesty.</li>
+                        <li>Required for job applications and business dealings.</li>
+                        <li>Needed for financial transactions, gun licenses, and legal matters.</li>
+                    </ul>
+
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                        <li>Completed Barangay Clearance Application Form</li>
+                        <li>Proof of Residency (e.g., utility bill, certification from barangay)</li>
+                        <li>Community Tax Certificate (Cedula)</li>
+                        <li>Barangay Clearance Fee</li>
+                    </ul>
+
+                    <p><strong>Validity:</strong> 1 year from the date of issuance.</p>
+                    <p><strong>Uses:</strong> Job applications, business permits, passport applications, vehicle registration, marriage licenses, and construction permits.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barangay Clearance Form -->
+    <div class="row">
+        <div class="col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Barangay Clearance Request Form</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'residents:barangay_clearance' %}" method="POST" id="barangay-clearance-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-5 mb-3">
+                                <label class="text-label">First Name*</label>
+                                <input type="text" name="first_name" class="form-control" placeholder="Enter your first name" value="{{ form.first_name.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-5 mb-3">
+                                <label class="text-label">Last Name*</label>
+                                <input type="text" name="last_name" class="form-control" placeholder="Enter your last name" value="{{ form.last_name.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-2 mb-3">
+                                <label class="text-label">M.I.*</label>
+                                <input type="text" name="middle_initial" class="form-control text-center" placeholder="M" maxlength="1" style="width: 60px; text-transform: uppercase;" value="{{ form.middle_initial.value|default_if_none:'' }}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <label class="text-label">Age*</label>
+                                <input type="number" name="age" class="form-control" placeholder="Enter your age" value="{{ form.age.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="text-label">Email Address*</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter your email" value="{{ form.email.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="text-label">Phone Number*</label>
+                                <input type="text" name="phone" class="form-control" placeholder="+63" value="{{ form.phone.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="text-label">Gender*</label>
+                                <select name="gender" class="form-control">
+                                    <option value="" disabled {% if not form.gender.value %}selected{% endif %}>Select Gender</option>
+                                    <option value="male" {% if form.gender.value == 'male' %}selected{% endif %}>Male</option>
+                                    <option value="female" {% if form.gender.value == 'female' %}selected{% endif %}>Female</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="text-label">Address*</label>
+                                <input type="text" name="address" class="form-control" placeholder="Enter your address" value="{{ form.address.value|default_if_none:'' }}">
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="text-label">Purpose of Clearance*</label>
+                                <select name="purpose" class="form-control">
+                                    <option value="" disabled {% if not form.purpose.value %}selected{% endif %}>Select Purpose</option>
+                                    <option value="employment" {% if form.purpose.value == 'employment' %}selected{% endif %}>Job Application</option>
+                                    <option value="business" {% if form.purpose.value == 'business' %}selected{% endif %}>Business Permit</option>
+                                    <option value="passport" {% if form.purpose.value == 'passport' %}selected{% endif %}>Passport Application</option>
+                                    <option value="vehicle" {% if form.purpose.value == 'vehicle' %}selected{% endif %}>Vehicle Registration</option>
+                                    <option value="marriage" {% if form.purpose.value == 'marriage' %}selected{% endif %}>Marriage License</option>
+                                    <option value="construction" {% if form.purpose.value == 'construction' %}selected{% endif %}>Construction Permit</option>
+                                    <option value="other" {% if form.purpose.value == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                            <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        </div>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    icon: "{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% endif %}",
+                    title: "{% if message.tags == 'success' %}Success{% else %}Error{% endif %}",
+                    text: "{{ message }}",
+                    confirmButtonColor: "{% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}"
+                });
+            {% endfor %}
+        {% endif %}
+    });
+</script>
+
+
+{% endblock %}

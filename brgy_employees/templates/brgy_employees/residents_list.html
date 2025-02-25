@@ -1,0 +1,133 @@
+{% extends "brgy_employees/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                {% comment %} <h4>Hi, welcome back!</h4> {% endcomment %}
+              
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'brgy_employees:residents_list'%}">Resident List</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- row -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Residents</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Address</th>
+                                    <th>Age</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Juan Dela Cruz</td>
+                                    <td>Purok 1, Barangay Malaya</td>
+                                    <td>45</td>
+                                    <td>09123456789</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Maria Santos</td>
+                                    <td>Purok 3, Barangay San Isidro</td>
+                                    <td>34</td>
+                                    <td>09234567890</td>
+                                    <td><span class="badge badge-primary">New Resident</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Pedro Reyes</td>
+                                    <td>Purok 7, Barangay Mapayapa</td>
+                                    <td>52</td>
+                                    <td>09345678901</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Ana Lopez</td>
+                                    <td>Purok 2, Barangay Bagong Silang</td>
+                                    <td>28</td>
+                                    <td>09456789012</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Ramon Gutierrez</td>
+                                    <td>Purok 5, Barangay Bayanihan</td>
+                                    <td>60</td>
+                                    <td>09567890123</td>
+                                    <td><span class="badge badge-danger">Inactive</span></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Carmen Dizon</td>
+                                    <td>Purok 4, Barangay Kapayapaan</td>
+                                    <td>41</td>
+                                    <td>09678901234</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Ricardo Mendoza</td>
+                                    <td>Purok 6, Barangay Kalayaan</td>
+                                    <td>37</td>
+                                    <td>09789012345</td>
+                                    <td><span class="badge badge-primary">New Resident</span></td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>Angela Torres</td>
+                                    <td>Purok 9, Barangay Masagana</td>
+                                    <td>25</td>
+                                    <td>09890123456</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                    <td>Josefa Ramos</td>
+                                    <td>Purok 8, Barangay Maginhawa</td>
+                                    <td>55</td>
+                                    <td>09901234567</td>
+                                    <td><span class="badge badge-danger">Inactive</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Address</th>
+                                    <th>Age</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

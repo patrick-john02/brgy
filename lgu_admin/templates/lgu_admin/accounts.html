@@ -1,0 +1,211 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>List of Accounts</h4>
+                <span>View and manage employee accounts</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Accounts</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'brgy_employees:residents_list' %}">Employees</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="text-right mb-3">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAccountModal">
+            <i class="fa fa-user-plus"></i> Add Account
+        </button>
+    </div>
+
+      <!-- Add Account Modal -->
+<div class="modal fade" id="addAccountModal" tabindex="-1" aria-labelledby="addAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAccountModalLabel">Create Barangay Official Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addAccountForm" method="POST" action="{% url 'lgu_admin:account_list' %}">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ form.username.value|default_if_none:'' }}" required>
+                        <small class="text-danger">{{ form.username.errors }}</small>
+                    </div>
+
+                    <!-- First Name -->
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+                        <small class="text-danger">{{ form.first_name.errors }}</small>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+                        <small class="text-danger">{{ form.last_name.errors }}</small>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" required>
+                        <small class="text-danger">{{ form.email.errors }}</small>
+                    </div>
+
+                    <!-- Phone Number (Optional, but useful) -->
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone">
+                    </div>
+
+                    <!-- Position (Optional) -->
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <select class="form-control" id="position" name="position">
+                            <option value="">Select Position</option>
+                            <option value="captain">Barangay Captain</option>
+                            <option value="kagawad">Kagawad</option>
+                            <option value="secretary">Barangay Secretary</option>
+                            <option value="treasurer">Barangay Treasurer</option>
+                            <option value="sk_chairman">SK Chairman</option>
+                        </select>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password1" required>
+                        <small class="text-danger">{{ form.password1.errors }}</small>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirm_password" name="password2" required>
+                        <small class="text-danger">{{ form.password2.errors }}</small>
+                    </div>
+
+                    <!-- Hidden User Type -->
+                    <input type="hidden" name="user_type" value="employee">
+
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- List of Accounts -->
+    <div class="row">
+        <!-- Account 1 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card account-card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="{% static 'image_sample/mika.jpg' %}" class="account-avatar" alt="User Avatar">
+                    <div class="ml-3">
+                        <h5 class="mb-1">Juan Dela Cruz</h5>
+                        <p class="text-muted mb-1"><i class="fa fa-map-marker"></i> Purok 1, Barangay Malaya</p>
+                        <p class="text-muted mb-1"><i class="fa fa-phone"></i> 09123456789</p>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account 2 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card account-card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="{% static 'image_sample/mika.jpg' %}" class="account-avatar" alt="User Avatar">
+                    <div class="ml-3">
+                        <h5 class="mb-1">Maria Santos</h5>
+                        <p class="text-muted mb-1"><i class="fa fa-map-marker"></i> Purok 3, Barangay San Isidro</p>
+                        <p class="text-muted mb-1"><i class="fa fa-phone"></i> 09234567890</p>
+                        <span class="badge badge-warning">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account 3 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card account-card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="{% static 'image_sample/mika.jpg' %}" class="account-avatar" alt="User Avatar">
+                    <div class="ml-3">
+                        <h5 class="mb-1">Pedro Reyes</h5>
+                        <p class="text-muted mb-1"><i class="fa fa-map-marker"></i> Purok 7, Barangay Mapayapa</p>
+                        <p class="text-muted mb-1"><i class="fa fa-phone"></i> 09345678901</p>
+                        <span class="badge badge-warning">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account 4 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card account-card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="{% static 'image_sample/mika.jpg' %}" class="account-avatar" alt="User Avatar">
+                    <div class="ml-3">
+                        <h5 class="mb-1">Ana Lopez</h5>
+                        <p class="text-muted mb-1"><i class="fa fa-map-marker"></i> Purok 2, Barangay Bagong Silang</p>
+                        <p class="text-muted mb-1"><i class="fa fa-phone"></i> 09456789012</p>
+                        <span class="badge badge-success">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account 5 -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card account-card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="{% static 'image_sample/mika.jpg' %}" class="account-avatar" alt="User Avatar">
+                    <div class="ml-3">
+                        <h5 class="mb-1">Ramon Gutierrez</h5>
+                        <p class="text-muted mb-1"><i class="fa fa-map-marker"></i> Purok 5, Barangay Bayanihan</p>
+                        <p class="text-muted mb-1"><i class="fa fa-phone"></i> 09567890123</p>
+                        <span class="badge badge-danger">Inactive</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+    .account-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+    .account-card:hover {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .account-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Resident Details</h4>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'lgu_admin:residents_list' %}">Residents</a></li>
+                <li class="breadcrumb-item active"><a href="#">Resident Details</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Resident Information</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- First Name, Middle Name, Last Name, Suffix -->
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <label>First Name</label>
+                                <input type="text" class="form-control" name="first_name" value="{{ resident.first_name }}" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Middle Name</label>
+                                <input type="text" class="form-control" name="middle_name" value="{{ resident.middle_name }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Last Name</label>
+                                <input type="text" class="form-control" name="last_name" value="{{ resident.last_name }}" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Suffix</label>
+                                <input type="text" class="form-control" name="suffix" value="{{ resident.suffix }}">
+                            </div>
+                        </div>
+
+                        <!-- Birth Date & Place of Birth -->
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label>Birth Date</label>
+                                <input type="date" class="form-control" name="birth_date" value="{{ resident.birth_date|date:'Y-m-d' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Place of Birth</label>
+                                <input type="text" class="form-control" name="place_of_birth" value="{{ resident.place_of_birth }}" required>
+                            </div>
+                        </div>
+
+                        <!-- Gender, Nationality, Civil Status -->
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>Gender</label>
+                                <select class="form-control" name="gender">
+                                    <option value="M" {% if resident.gender == 'M' %}selected{% endif %}>Male</option>
+                                    <option value="F" {% if resident.gender == 'F' %}selected{% endif %}>Female</option>
+                                    <option value="O" {% if resident.gender == 'O' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Nationality</label>
+                                <input type="text" class="form-control" name="nationality" value="{{ resident.nationality }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Civil Status</label>
+                                <select class="form-control" name="civil_status">
+                                    {% for value, label in resident.CIVIL_STATUS_CHOICES %}
+                                        <option value="{{ value }}" {% if resident.civil_status == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+
+                        <!-- Address (Full Width) -->
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" class="form-control" name="address" value="{{ resident.address }}" placeholder = "House number, street, subdivision" required>
+                        </div>
+
+                        <!-- Barangay Zone & Contact Number -->
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>Barangay Zone</label>
+                                <input type="text" class="form-control" name="barangay_zone" value="{{ resident.barangay_zone }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Contact Number</label>
+                                <input type="text" class="form-control" name="contact_number" value="{{ resident.contact_number }}">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Resident Status</label>
+                                <select class="form-control" name="resident_status">
+                                    <option value="active" {% if resident.is_active %}selected{% endif %}>Active</option>
+                                    <option value="pending" {% if resident.resident_profile.has_requested_account and not resident.is_active %}selected{% endif %}>Pending</option>
+                                    <option value="inactive" {% if not resident.is_active and not resident.resident_profile.has_requested_account %}selected{% endif %}>Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Household, Voter Status, ID Number -->
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>Household</label>
+                                <input type="text" class="form-control" name="household" value="{{ resident.household.household_number }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Voter Status</label>
+                                <select class="form-control" name="voter_status">
+                                    <option value="True" {% if resident.voter_status %}selected{% endif %}>Registered</option>
+                                    <option value="False" {% if not resident.voter_status %}selected{% endif %}>Not Registered</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Any Governement ID Number</label>
+                                <input type="text" class="form-control" name="id_number" value="{{ resident.id_number }}" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Date Registered & Last Updated (View-Only, No Input Box) -->
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label>Date Registered:</label>
+                                <p class="form-control-plaintext">{{ resident.date_registered }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Last Updated:</label>
+                                <p class="form-control-plaintext">{{ resident.updated_at }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-group row">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <a href="{% url 'lgu_admin:residents_list' %}" class="btn btn-secondary">Back</a>
+                                <a href="#" class="btn btn-danger">Delete Resident</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

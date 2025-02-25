@@ -1,0 +1,91 @@
+{% extends "brgy_employees/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Resolution Management</h4>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="#">Resolutions</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Resolutions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                   
+                                    <th>Resolution No.</th>
+                                    <th>Title</th>
+                                    <th>Date Passed</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                   
+                                    <td>resolution-24-02-19-0001</td>
+                                    <td>Resolution Approving the Annual Budget</td>
+                                    <td>January 15, 2024</td>
+                                    <td><span class="badge badge-success">Approved</span></td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td>resolution-24-02-19-0002</td>
+                                    <td>Resolution for Road Repair Funding</td>
+                                    <td>February 10, 2024</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td>resolution-24-02-19-0003</td>
+                                    <td>Resolution Granting Financial Aid to Senior Citizens</td>
+                                    <td>March 5, 2024</td>
+                                    <td><span class="badge badge-success">Approved</span></td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td>resolution-24-02-19-0004</td>
+                                    <td>Resolution for Environmental Protection Program</td>
+                                    <td>April 20, 2024</td>
+                                    <td><span class="badge badge-danger">Rejected</span></td>
+                                </tr>
+                                <tr>
+                                    
+                                    <td>resolution-24-02-19-0005</td>
+                                    <td>Resolution Supporting Local Businesses</td>
+                                    <td>May 15, 2024</td>
+                                    <td><span class="badge badge-warning">Pending</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    
+                                    <th>Resolution No.</th>
+                                    <th>Title</th>
+                                    <th>Date Passed</th>
+                                    <th>Status</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

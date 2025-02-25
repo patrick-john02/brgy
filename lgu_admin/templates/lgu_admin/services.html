@@ -1,0 +1,81 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div id="uploadResult"></div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="#">Services</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Form to Upload Services -->
+    <div class="row">
+        <div class="col-xl-12 col-xxl-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Post a Service</h4>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <form id="serviceForm" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <span class="text-dark">Title</span>
+                                <input type="text" class="form-control" name="title" placeholder="Enter your Title" required>
+                            </div>
+                        
+                            <span class="text-dark">Description</span>
+                            <div class="form-group">
+                                <textarea class="form-control" rows="4" name="description" required></textarea>
+                            </div>
+                        
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Upload</span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="image" id="imageInput" required>
+                                    <label class="custom-file-label" for="imageInput">Choose file</label>
+                                </div>
+                            </div>
+                        
+                            <button type="submit" class="btn btn-primary">Upload Service</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services List -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">List of Services</h4>
+                </div>
+                <div class="card-body">
+                    <div id="servicesList">
+                        {% for service in services %}
+                        <div class="service-item mb-3">
+                            <h5>{{ service.title }}</h5>
+                            <p>{{ service.description }}</p>
+                            {% if service.image %}
+                            <img src="{{ service.image.url }}" alt="Service Image" class="img-fluid" width="200">
+                            {% endif %}
+                            <hr>
+                        </div>
+                        {% empty %}
+                        <p>No services available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
