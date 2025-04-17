@@ -94,8 +94,8 @@ TEMPLATES = [
     },
 ]
 
-OPENROUTER_API_KEY = "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"
 
+OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY')
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
