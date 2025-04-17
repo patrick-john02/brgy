@@ -1,8 +1,8 @@
 from django.db import models
 from core.models import CustomUser
+from residents.models import Resident
 
 class BarangayEmployee(models.Model):
-    """Model for barangay employees with job roles and assignments."""
     EMPLOYEE_ROLES = [
         ('staff', 'Staff'),
         ('health_worker', 'Health Worker'),
@@ -19,3 +19,4 @@ class BarangayEmployee(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+

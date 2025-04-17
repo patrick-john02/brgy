@@ -18,6 +18,42 @@ class ManageResidentList(LoginRequiredMixin, EmployeeRequiredMixin, TemplateView
 
 class EmployeeManageReports(LoginRequiredMixin, EmployeeRequiredMixin, TemplateView):
     template_name = 'brgy_employees/incidents_reports.html'
+    
+
+# class ProcessDocumentRequestView(LoginRequiredMixin, View):
+#     """Allow barangay employees to process document requests."""
+
+#     def get(self, request):
+#         if not hasattr(request.user, 'employee_profile'):
+#             messages.error(request, "You are not authorized to process requests.")
+#             return redirect('brgy_employees:dashboard')
+
+#         pending_requests = DocumentRequest.objects.filter(status='pending')
+#         return render(request, 'brgy_employees/process_requests.html', {'pending_requests': pending_requests})
+
+#     def post(self, request, request_id):
+#         document_request = get_object_or_404(DocumentRequest, id=request_id)
+        
+#         if not hasattr(request.user, 'employee_profile'):
+#             messages.error(request, "You are not authorized to process requests.")
+#             return redirect('brgy_employees:dashboard')
+
+#         action = request.POST.get('action')
+#         if action == 'approve':
+#             document_request.status = 'approved'
+#             document_request.date_processed = now()
+#             document_request.processed_by = request.user.employee_profile
+#             messages.success(request, "Document request approved successfully.")
+#         elif action == 'reject':
+#             document_request.status = 'rejected'
+#             document_request.date_processed = now()
+#             document_request.processed_by = request.user.employee_profile
+#             messages.warning(request, "Document request rejected.")
+#         else:
+#             messages.error(request, "Invalid action.")
+
+#         document_request.save()
+#         return redirect('brgy_employees:process_requests')
 
 class EmployeeManageRequest(LoginRequiredMixin, EmployeeRequiredMixin, TemplateView):
     template_name = 'brgy_employees/residents_request.html'

@@ -4,4 +4,6 @@ from .models import *
 admin.site.register(Household)
 admin.site.register(Resident)
 admin.site.register(ResidentProfile)
+admin.site.register(JobseekerCertificationRequest)
+
 

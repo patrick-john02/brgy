@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import mimetypes
+
+mimetypes.add_type("text/css", ".css", True)
 
 load_dotenv()
 
@@ -39,6 +42,8 @@ ALLOWED_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", "localhost,
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,9 +54,17 @@ INSTALLED_APPS = [
     'lgu_admin',
     'brgy_employees',
     'residents',
-    
-    
+    'widget_tweaks',
+      
 ]
+ASGI_APPLICATION = "barangay.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,13 +94,24 @@ TEMPLATES = [
     },
 ]
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default session backend
+OPENROUTER_API_KEY = "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"
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
-SESSION_COOKIE_AGE = 3600  # 1 hour
+SESSION_COOKIE_AGE = 86400    # 1 day 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 WSGI_APPLICATION = 'barangay.wsgi.application'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ityourboiaki@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'xjck bbyo adpe bnyp'  # Use App Password for Gmail
 
 
 # Database
@@ -136,6 +160,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'  
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  

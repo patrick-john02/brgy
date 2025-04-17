@@ -1,0 +1,221 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ document_type }}</title>
+    <style>
+        body {
+            font-family: "Times New Roman", serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .certificate {
+            position: relative;
+            width: 95%;
+            max-width: 900px;
+            margin: auto;
+            padding: 50px;
+            background: white;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("{% static 'logos/logo1.png' %}") no-repeat center;
+            background-size: 50%;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header h3 {
+            margin: -15px 0;
+        }
+        .header h2 {
+            margin-top: 10px;
+            font-size: 24px;
+        }
+        .header img {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0;
+        }
+        .header .left-logo {
+            left: 20px;
+        }
+        .header .right-logo {
+            right: 20px;
+        }
+        .title {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .title h1 {
+            font-size: 36px;
+            text-decoration: underline;
+            margin-bottom: 10px;
+        }
+        .content {
+            text-align: justify;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 30px;
+            padding: 0 30px;
+        }
+        .signature {
+            text-align: right;
+            margin-top: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            padding-right: 40px;
+        }
+        .print-btn, .approve-btn, select {
+            margin-top: 25px;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            .print-btn, .approve-btn, select {
+                display: none;
+            }
+            .certificate {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px;
+                box-shadow: none;
+                background: white; /* Ensure the certificate has a white background */
+            }
+            .background {
+                background: url("{% static 'logos/logo1.png' %}") no-repeat center !important;
+                background-size: 50% !important;
+                opacity: 0.1 !important;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate" id="certificate">
+        <div class="background"></div>
+        <div class="content">
+            <div class="header">
+                <img src="{% static 'logos/logo1.png' %}" class="left-logo" alt="Left Logo">
+                <h3>Republic of the Philippines</h3>
+                <h3>Province of Isabela</h3>
+                <h3>Municipality of Santa Maria</h3>
+                <h2>BARANGAY BANGAD</h2>
+                <h3>OFFICE OF THE PUNONG BARANGAY</h3>
+                <img src="{% static 'logos/logo2.png' %}" class="right-logo" alt="Right Logo">
+            </div>
+            <div class="title">
+                <h1>CERTIFICATE OF GOOD MORAL CHARACTER</h1>
+            </div>
+            <div class="content">
+                <p>
+                    This is to certify that <b>{{ resident_full_name }}</b>, residing at 
+                    Barangay Bangad, Santa Maria, Isabela, is known to be a person of good moral character,
+                    with no derogatory records found in our barangay.
+                </p>
+                <p>
+                    This certification is issued upon request of the above-named individual for <b>{{ purpose }}</b>.
+                </p>
+                <p>
+                    Signed this 
+                    <select id="day"></select> 
+                    <select id="month"></select> 
+                    <select id="year"></select>,
+                    in Barangay Bangad, Santa Maria, Isabela.
+                </p>
+                <p id="issued_date_text" style="display: none;">
+                    Signed this day <span id="selected_date"></span> in Barangay Bangad, Santa Maria, Isabela.
+                </p>
+            </div>
+            <div class="signature">
+                <p><b>Hon. MEL L. MANGUZ</b></p>
+                <p>Punong Barangay</p>
+            </div>
+    </div>
+</div>
+    <center>
+        <form method="POST" action="{% url 'lgu_admin:approve_certificate' request_id=request_id %}">
+            {% csrf_token %}
+            <!-- Add hidden field for document_type -->
+            <input type="hidden" name="document_type" value="Certificate of Residency">  <!-- Adjust value dynamically if needed -->
+            <button type="submit" class="approve-btn">Approve Certificate</button>
+        </form>
+        <button class="print-btn" onclick="printCertificate()">Print Certificate</button>
+    </center>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const daySelect = document.getElementById("day");
+        const monthSelect = document.getElementById("month");
+        const yearSelect = document.getElementById("year");
+
+        for (let i = 1; i <= 31; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            daySelect.appendChild(option);
+        }
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        months.forEach((month, index) => {
+            let option = document.createElement("option");
+            option.value = index + 1;
+            option.text = month;
+            monthSelect.appendChild(option);
+        });
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear; i <= currentYear + 10; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            yearSelect.appendChild(option);
+        }
+        const today = new Date();
+        daySelect.value = today.getDate();
+        monthSelect.value = today.getMonth() + 1;
+        yearSelect.value = today.getFullYear();
+    });
+    function printCertificate() {
+        const day = document.getElementById("day").value;
+        const month = document.getElementById("month").options[document.getElementById("month").selectedIndex].text;
+        const year = document.getElementById("year").value;
+
+        document.getElementById("selected_date").innerText = `${day} ${month} ${year}`;
+        document.getElementById("issued_date_text").style.display = "block";
+        document.getElementById("day").style.display = "none";
+        document.getElementById("month").style.display = "none";
+        document.getElementById("year").style.display = "none";
+        window.print();
+        document.getElementById("day").style.display = "inline";
+        document.getElementById("month").style.display = "inline";
+        document.getElementById("year").style.display = "inline";
+        document.getElementById("issued_date_text").style.display = "none";
+    }
+</script>
+</body>
+</html>

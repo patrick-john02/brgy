@@ -11,8 +11,8 @@
                         class="icon icon-app-store"></i><span class="nav-text">Citizen Records</span></a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'lgu_admin:residents_list'%}">Residents List</a></li>
+                    <li><a href="{% url 'lgu_admin:unverified_residents'%}">Verification</a></li>
                     <li><a href="{% url 'lgu_admin:account_list'%}">Accounts</a></li>
-                    <li><a href="{% url 'lgu_admin:reports'%}">Reports</a></li>
                 </ul>
             </li>
            
@@ -20,24 +20,24 @@
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-form"></i><span class="nav-text">Residents Requests</span></a>
                 <ul aria-expanded="false">
-                    <li><a href="{%url 'lgu_admin:brgy_clearance'%}">Clearance</a></li>
+                    <li><a href="{%url 'lgu_admin:brgy_clearance'%}">Documents</a></li>
                 </ul>
             </li>
 
-            <li class="nav-label">Community Programs</li>
+            {% comment %} <li class="nav-label">Community Programs</li>
             <li><a href="#" aria-expanded="false"><i class="icon icon-single-04"></i><span
-                class="nav-text">Program List</span></a></li>
+                class="nav-text">Program List</span></a></li> {% endcomment %}
            
             <li class="nav-label">Inventory</li>
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-layout-25"></i><span class="nav-text">Inventory Records</span></a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'lgu_admin:brgy_equipment'%}">Equipment</a></li>
-                    <li><a href="{%url 'lgu_admin:brgy_supplies'%}">Supplies</a></li>
+                    {% comment %} <li><a href="{%url 'lgu_admin:brgy_supplies'%}">Supplies</a></li> {% endcomment %}
                 </ul>
             </li>
 
-            <li class="nav-label">Legislative Documents</li>
+            {% comment %} <li class="nav-label">Legislative Documents</li>
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-single-copy-06"></i><span class="nav-text">Resolution and Ordinances</span></a>
                 <ul aria-expanded="false">
@@ -45,7 +45,7 @@
                     <li><a href="{% url 'lgu_admin:ordinances'%}">Ordinances</a></li>
                     <li><a href="{% url 'lgu_admin:memorandums'%}">Memorandum</a></li>
                 </ul>
-            </li>
+            </li> {% endcomment %}
 
             <li class="nav-label">Public Information</li>
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
@@ -54,6 +54,17 @@
                     <li><a href="{% url 'lgu_admin:service'%}">Services</a></li>
                     <li><a href="{% url 'lgu_admin:project'%}">Programs</a></li>
                     <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li>
+                </ul>
+            </li>
+
+
+            <li class="nav-label">Archives</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-single-copy-06"></i><span class="nav-text">Citizen's Record</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url "lgu_admin:archived_residents"%}">Residents</a></li>
+                    {% comment %} <li><a href="{% url 'lgu_admin:project'%}">Programs</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li> {% endcomment %}
                 </ul>
             </li>
         </ul>

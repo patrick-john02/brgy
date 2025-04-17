@@ -25,6 +25,7 @@ urlpatterns = [
     path('lgu_admin/', include('lgu_admin.urls', namespace='lgu_admin')),
     path('brgy_employees/', include('brgy_employees.urls', namespace='brgy_employees')),
     path('residents/', include('residents.urls' , namespace='residents')),
+    # path("chat/", include("chat.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

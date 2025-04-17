@@ -3,8 +3,8 @@
     <a href="{% url 'lgu_admin:dashboard' %}" class="brand-logo">
        
       
-        <img class="brand-title" src="{% static 'logos/2.png'%}" alt="">
-        <span class="brand-title">Brgy Calamagui North</span>
+        <img class="brand-title" src="{% static 'logos/bangadlogofinal.png'%}" alt="">
+        <span class="brand-title">Barangay Bangad</span>
     </a>
 
     <div class="nav-control">
@@ -97,14 +97,14 @@
                             <i class="mdi mdi-account"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="#" class="dropdown-item">
+                            <a href="{% url 'lgu_admin:profile' %}" class="dropdown-item">
                                 <i class="icon-user"></i>
                                 <span class="ml-2">Profile </span>
                             </a>
-                            <a href="#" class="dropdown-item">
+                            {% comment %} <a href="#" class="dropdown-item">
                                 <i class="icon-envelope-open"></i>
                                 <span class="ml-2">Inbox </span>
-                            </a>
+                            </a> {% endcomment %}
                             <form action="{% url 'lgu_admin:logout' %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="dropdown-item" id="logout-button">

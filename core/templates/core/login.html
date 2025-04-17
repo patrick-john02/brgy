@@ -22,13 +22,14 @@
 
       <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
         <div class="flex flex-col overflow-y-auto md:flex-row">
-          <div class="h-32 md:h-auto md:w-1/2">
+          <div class="h-40 md:h-auto md:w-1/2 flex justify-center items-center">
             <img
               aria-hidden="true"
-              class="object-cover w-full h-full dark:hidden"
-              src="{% static 'bg/login1.jpg' %}"
+              class="object-cover w-[300px] h-[300px] dark:hidden"
+              src="{% static 'bg/1.jpg' %}"
               alt="Office"
             />
+        
             <img
               aria-hidden="true"
               class="hidden object-cover w-full h-full dark:block"
@@ -36,6 +37,7 @@
               alt="Office"
             />
           </div>
+          
           <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div class="w-full">
               <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
@@ -88,7 +90,7 @@
               <p class="mt-4">
                 <a
                   class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="./forgot-password.html"
+                  href="#"
                 >
                   Forgot your password?
                 </a>
@@ -96,7 +98,7 @@
               <p class="mt-1">
                 <a
                   class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="#"
+                  href="{% url 'core:resident_registration'%}"
                 >
                   Create account
 
@@ -104,11 +106,17 @@
               </p>
               <p class="mt-1">
                 <a
-                  class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  href="{% url 'core:landing' %}"
-                >
-                   go back
-                </a>
+                class="inline-flex items-center text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
+                href="{% url 'core:landing' %}"
+              >
+                <!-- Left Arrow Icon -->
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Back
+              </a>
+              
               </p>
             </div>
           </div>

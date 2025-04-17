@@ -1,6 +1,13 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 from .views import (ResidentDashboardView, 
-                    # RequestBarangayClearance,
+                    ResidentsDocumentRequest,
+                    PendingRequestsView,
+                    ApproveRequestsView,
+                    RejectedRequestsView,
+                    ResidentUploadIDView,
                     CustomLogoutView,
                     ResidentDocumentSubmitted,
                     ResidentDocumentApplyPrograms,
@@ -12,12 +19,24 @@ app_name = 'residents'
 
 urlpatterns = [
     path('dashboard/', ResidentDashboardView.as_view(), name='dashboard'),
-    # path('barangay_clearance/', RequestBarangayClearance.as_view(), name = 'barangay_clearance'),
-    path('Submitted/', ResidentDocumentSubmitted.as_view(), name = 'barangay_submitted' ),
-    path('Programs/', ResidentDocumentApplyPrograms.as_view(), name = 'apply_programs' ),
-    # path('View_Programs/', RequestBarangayClearance.as_view(), name = 'view_programs'),
-    path('inventory_borrow', InventoryBorrow.as_view(), name = 'inventory_borrow' ),
+
+    #upload for verrifications
+    path('upload-id/', ResidentUploadIDView.as_view(), name='resident_upload_id'),
+    
+    #documents paths
+    path('documents/', ResidentsDocumentRequest.as_view(), name ='residendocument'),
+    path('pending_requests/', PendingRequestsView.as_view(), name='pending_requests'),
+    path('approve_requests/', ApproveRequestsView.as_view(), name='approve_requests'),
+    path('reject_requests/', RejectedRequestsView.as_view(), name='reject_requests'),
+
+
     
     
+    path('Submitted/', ResidentDocumentSubmitted.as_view(), name='barangay_submitted'),
+    path('Programs/', ResidentDocumentApplyPrograms.as_view(), name='apply_programs'),
+    path('inventory_borrow', InventoryBorrow.as_view(), name='inventory_borrow'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

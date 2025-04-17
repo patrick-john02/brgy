@@ -1,16 +1,16 @@
-"""
-ASGI config for barangay project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.0/howto/deployment/asgi/
-"""
-
 import os
-
+import django
 from django.core.asgi import get_asgi_application
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
+import lgu_admin.routing  # Ensure this matches your app name
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'barangay.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "barangay.settings")
+django.setup()  # 👈 Add this to make sure Django settings are loaded!
 
-application = get_asgi_application()
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(lgu_admin.routing.websocket_urlpatterns)
+    ),
+})

@@ -13,7 +13,7 @@
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                <li class="breadcrumb-item active"><a href="{% url 'residents:barangay_clearance' %}">Barangay Clearance</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'residents:document_request' %}">Barangay Clearance</a></li>
             </ol>
         </div>
     </div>
@@ -48,93 +48,118 @@
         </div>
     </div>
 
-    <!-- Barangay Clearance Form -->
-    <div class="row">
-        <div class="col-xl-12 col-xxl-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Barangay Clearance Request Form</h4>
-                </div>
-                <div class="card-body">
-                    <form action="{% url 'residents:barangay_clearance' %}" method="POST" id="barangay-clearance-form">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-lg-5 mb-3">
-                                <label class="text-label">First Name*</label>
-                                <input type="text" name="first_name" class="form-control" placeholder="Enter your first name" value="{{ form.first_name.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-5 mb-3">
-                                <label class="text-label">Last Name*</label>
-                                <input type="text" name="last_name" class="form-control" placeholder="Enter your last name" value="{{ form.last_name.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-2 mb-3">
-                                <label class="text-label">M.I.*</label>
-                                <input type="text" name="middle_initial" class="form-control text-center" placeholder="M" maxlength="1" style="width: 60px; text-transform: uppercase;" value="{{ form.middle_initial.value|default_if_none:'' }}">
-                            </div>
+<!-- Barangay Document Request Form -->
+<div class="row">
+    <div class="col-xl-12 col-xxl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Barangay Document Request Form</h4>
+            </div>
+            <div class="card-body">
+                <form action="/residents/document_request/" method="POST">
+                    {% csrf_token %}
+                
+                    <!-- Display form errors -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>There were errors in your form submission:</strong>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6 mb-3">
-                                <label class="text-label">Age*</label>
-                                <input type="number" name="age" class="form-control" placeholder="Enter your age" value="{{ form.age.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-6 mb-3">
-                                <label class="text-label">Email Address*</label>
-                                <input type="email" name="email" class="form-control" placeholder="Enter your email" value="{{ form.email.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-6 mb-3">
-                                <label class="text-label">Phone Number*</label>
-                                <input type="text" name="phone" class="form-control" placeholder="+63" value="{{ form.phone.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-6 mb-3">
-                                <label class="text-label">Gender*</label>
-                                <select name="gender" class="form-control">
-                                    <option value="" disabled {% if not form.gender.value %}selected{% endif %}>Select Gender</option>
-                                    <option value="male" {% if form.gender.value == 'male' %}selected{% endif %}>Male</option>
-                                    <option value="female" {% if form.gender.value == 'female' %}selected{% endif %}>Female</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="text-label">Address*</label>
-                                <input type="text" name="address" class="form-control" placeholder="Enter your address" value="{{ form.address.value|default_if_none:'' }}">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="text-label">Purpose of Clearance*</label>
-                                <select name="purpose" class="form-control">
-                                    <option value="" disabled {% if not form.purpose.value %}selected{% endif %}>Select Purpose</option>
-                                    <option value="employment" {% if form.purpose.value == 'employment' %}selected{% endif %}>Job Application</option>
-                                    <option value="business" {% if form.purpose.value == 'business' %}selected{% endif %}>Business Permit</option>
-                                    <option value="passport" {% if form.purpose.value == 'passport' %}selected{% endif %}>Passport Application</option>
-                                    <option value="vehicle" {% if form.purpose.value == 'vehicle' %}selected{% endif %}>Vehicle Registration</option>
-                                    <option value="marriage" {% if form.purpose.value == 'marriage' %}selected{% endif %}>Marriage License</option>
-                                    <option value="construction" {% if form.purpose.value == 'construction' %}selected{% endif %}>Construction Permit</option>
-                                    <option value="other" {% if form.purpose.value == 'other' %}selected{% endif %}>Other</option>
-                                </select>
-                            </div>
+                    {% endif %}
+                
+                    <div class="row">
+                        <!-- Document Type Dropdown -->
+                        <div class="col-lg-12 mb-3">
+                            <label class="text-label">Document Type*</label>
+                            {{ form.document_type }}
                         </div>
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">Submit Request</button>
-                            <button type="reset" class="btn btn-secondary">Clear Form</button>
+                
+                        <!-- Purpose Dropdown -->
+                        <div class="col-lg-12 mb-3">
+                            <label class="text-label">Purpose*</label>
+                            {{ form.purpose }}
                         </div>
-                    </form>                    
-                </div>
+                    </div>
+                
+                    <!-- Dynamic Fields -->
+                    <div id="additionalFields" class="row" style="display: none;">
+                        <div class="col-lg-12 mb-3 additional" id="yearsResidencyField">
+                            <label class="text-label">Years of Residency*</label>
+                            {{ form.years_of_residency }}
+                        </div>
+                        
+                        <div class="col-lg-12 mb-3 additional" id="guardianField">
+                            <label class="text-label">Guardian Name*</label>
+                            {{ form.guardian_name }}
+                        </div>
+                        
+                        <div class="col-lg-12 mb-3 additional" id="childField">
+                            <label class="text-label">Child Name*</label>
+                            {{ form.child_name }}
+                            <label class="text-label">Child Birthdate*</label>
+                            {{ form.child_birthdate }}
+                        </div>
+                        
+                        <div class="col-lg-12 mb-3 additional" id="businessField">
+                            <label class="text-label">Business Name*</label>
+                            {{ form.business_name }}
+                            <label class="text-label">Line of Business*</label>
+                            {{ form.line_of_business }}
+                        </div>
+                        
+                        <div class="col-lg-12 mb-3 additional" id="appearanceField">
+                            <label class="text-label">Designation*</label>
+                            {{ form.designation }}
+                            <label class="text-label">Office/Agency*</label>
+                            {{ form.office_agency }}
+                        </div>
+                    </div>
+                
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        {% if messages %}
-            {% for message in messages %}
-                Swal.fire({
-                    icon: "{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% endif %}",
-                    title: "{% if message.tags == 'success' %}Success{% else %}Error{% endif %}",
-                    text: "{{ message }}",
-                    confirmButtonColor: "{% if message.tags == 'success' %}#28a745{% else %}#dc3545{% endif %}"
+        const docTypeField = document.querySelector("#id_document_type");
+        const additionalFields = document.querySelector("#additionalFields");
+        const fields = {
+            "residency": ["yearsResidencyField"],
+            "guardianship": ["guardianField", "childField"],
+            "business": ["businessField"],
+            "appearance": ["appearanceField"]
+        };
+
+        function toggleFields() {
+            const selectedType = docTypeField.value;
+            additionalFields.style.display = "block";
+            
+            // Hide all fields first
+            document.querySelectorAll(".additional").forEach(field => field.style.display = "none");
+
+            // Show only relevant fields
+            if (fields[selectedType]) {
+                fields[selectedType].forEach(fieldId => {
+                    document.getElementById(fieldId).style.display = "block";
                 });
-            {% endfor %}
-        {% endif %}
+            }
+        }
+
+        docTypeField.addEventListener("change", toggleFields);
+        toggleFields(); // Run on page load
     });
 </script>
-
 
 {% endblock %}

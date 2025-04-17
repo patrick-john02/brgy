@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -6,7 +6,37 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from core.mixins import ResidentRequiredMixin
-# from .forms import BarangayClearanceForm
+from.forms import (JobseekerCertificationForm,
+                   CertificateOfGuardianshipForm,
+                   CertificateOfGoodMoralCharacterForm,
+                   BarangayBusinessCertificateForm,
+                   BarangayClearanceForm,
+                   CertificationForm,
+                   CertificateOfResidencyForm,
+                   OneAndSamePersonCertificationForm,
+                   CertificateOfUnemploymentForm,
+                   CertificateOfIndigencyForm,
+                   CertificateOfAppearanceForm,
+                   
+)
+from .models import (
+    CertificateOfIndigency,
+    JobseekerCertificationRequest,
+    CertificateOfGuardianshipRequest,
+    CertificateOfGoodMoralCharacterRequest,
+    BarangayBusinessCertificateRequest,
+    BarangayClearanceRequest,
+    CertificationRequest,
+    CertificateOfResidency,
+    OneAndSamePersonCertification,
+    CertificateOfUnemployment,
+    CertificateOfAppearance
+)
+
+from django.utils.timezone import localtime
+from django.http import JsonResponse
+
+import pytz
 
 #resident dashboard
 class ResidentDashboardView(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):
@@ -17,31 +47,182 @@ class ResidentDashboardView(LoginRequiredMixin, ResidentRequiredMixin, TemplateV
         context['user'] = self.request.user
         return context
 
-#resident barangay requests
-# class RequestBarangayClearance(LoginRequiredMixin, View):
-#     template_name = 'residents/barangay_clearance.html'
+class ResidentUploadIDView(LoginRequiredMixin, View):
+    template_name = 'residents/unverified_dashboard.html'
 
-#     def get(self, request):
-#         form = BarangayClearanceForm()
-#         return render(request, self.template_name, {'form': form})
-    
-#     def post(self, request):
-#         form = BarangayClearanceForm(request.POST)
-#         if form.is_valid():
-#             if not request.user.resident_profile:  # Ensure resident_profile exists
-#                 messages.error(request, "Your account is not linked to a resident profile.")
-#                 return redirect('core:error')  
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
 
-#             clearance_request = form.save(commit=False)
-#             clearance_request.resident = request.user.resident_profile
-#             clearance_request.save()
-#             messages.success(request, "Your barangay clearance request has been submitted successfully!")
-#             return redirect('residents:barangay_clearance')
-#         return render(request, self.template_name, {'form': form})
+    def post(self, request, *args, **kwargs):
+        government_id = request.FILES.get('government_id')
+
+        if government_id:
+            request.user.government_id = government_id
+            request.user.save()
+            messages.success(request, "Valid ID uploaded successfully. Please wait for admin verification.")
+            return redirect('residents:resident_upload_id')
+
+        messages.error(request, "No file uploaded. Please try again.")
+        return render(request, self.template_name)
 
 
-# class ViewPrograms(LoginRequiredMixin, TemplateView):
-#     template_name = 'residents/view_programs.html'
+
+class ResidentsDocumentRequest(LoginRequiredMixin, View):
+    template_name = "residents/document_request.html"
+
+    def get(self, request, *args, **kwargs):
+        indigency_form = CertificateOfIndigencyForm()
+        jobseeker_form = JobseekerCertificationForm()
+        guardianship_form = CertificateOfGuardianshipForm()
+        good_moral_form = CertificateOfGoodMoralCharacterForm()
+        business_certificate_form = BarangayBusinessCertificateForm()
+        barangay_clearance_form = BarangayClearanceForm()
+        certification_form = CertificationForm()
+        residency_form = CertificateOfResidencyForm()
+        one_and_same_person_form = OneAndSamePersonCertificationForm()
+        unemployment_form = CertificateOfUnemploymentForm()
+        appearance_form = CertificateOfAppearanceForm()
+
+        return render(request, self.template_name, {
+            'indigency_form': indigency_form,
+            'jobseeker_form': jobseeker_form,
+            'guardianship_form': guardianship_form,
+            'good_moral_form': good_moral_form,
+            'business_certificate_form': business_certificate_form,
+            'barangay_clearance_form': barangay_clearance_form,
+            'certification_form': certification_form,
+            'residency_form': residency_form,
+            'one_and_same_person_form': one_and_same_person_form,
+            'unemployment_form': unemployment_form,
+            'appearance_form': appearance_form,
+        })
+
+    def post(self, request, *args, **kwargs):
+        document_type = request.POST.get('document_type')
+
+        if document_type == 'Certificate of Indigency':
+            form = CertificateOfIndigencyForm(request.POST)
+        elif document_type == 'Jobseeker Certification':
+            form = JobseekerCertificationForm(request.POST)
+        elif document_type == 'Certificate of Guardianship':
+            form = CertificateOfGuardianshipForm(request.POST)
+        elif document_type == 'Certificate of Good Moral Character':
+            form = CertificateOfGoodMoralCharacterForm(request.POST)
+        elif document_type == 'Barangay Business Certificate':
+            form = BarangayBusinessCertificateForm(request.POST)
+        elif document_type == 'Barangay Clearance':
+            form = BarangayClearanceForm(request.POST)
+        elif document_type == 'Certification Request':
+            form = CertificationForm(request.POST)
+        elif document_type == 'Certificate of Residency':
+            form = CertificateOfResidencyForm(request.POST)
+        elif document_type == 'One and the Same Person Certification':
+            form = OneAndSamePersonCertificationForm(request.POST)
+        elif document_type == 'Certificate of Unemployment':
+            form = CertificateOfUnemploymentForm(request.POST)
+        elif document_type == 'Certificate of Appearance':
+            form = CertificateOfAppearanceForm(request.POST)
+        else:
+            form = None
+
+        if form and form.is_valid():
+            form_instance = form.save(commit=False)
+            form_instance.resident = request.user
+            form_instance.save()
+            return redirect('residents:dashboard')
+
+        return self.get(request)
+
+
+class PendingRequestsView(View):
+    models = {
+        'Certificate of Indigency': CertificateOfIndigency,
+        'Jobseeker Certification': JobseekerCertificationRequest,
+        'Certificate of Guardianship': CertificateOfGuardianshipRequest,
+        'Good Moral Certificate': CertificateOfGoodMoralCharacterRequest,
+        'Business Certificate': BarangayBusinessCertificateRequest,
+        'Barangay Clearance': BarangayClearanceRequest,
+        'Certification Request': CertificationRequest,
+        'Certificate of Residency': CertificateOfResidency,
+        'One and Same Person Certificate': OneAndSamePersonCertification,
+        'Unemployment Certificate': CertificateOfUnemployment,
+        'Certificate of Appearance': CertificateOfAppearance,
+    }
+
+    def get(self, request):
+        pending_requests = []
+
+        for doc_type, model in self.models.items():
+            requests = model.objects.filter(status="Pending").values('date_requested', 'status').order_by('-date_requested')
+            for req in requests:
+                req['document_type'] = doc_type
+                pending_requests.append(req)
+
+        return JsonResponse(pending_requests, safe=False)
+
+
+
+class ApproveRequestsView(View):
+    models = {
+        'Certificate of Indigency': CertificateOfIndigency,
+        'Jobseeker Certification': JobseekerCertificationRequest,
+        'Certificate of Guardianship': CertificateOfGuardianshipRequest,
+        'Good Moral Certificate': CertificateOfGoodMoralCharacterRequest,
+        'Business Certificate': BarangayBusinessCertificateRequest,
+        'Barangay Clearance': BarangayClearanceRequest,
+        'Certification Request': CertificationRequest,
+        'Certificate of Residency': CertificateOfResidency,
+        'One and Same Person Certificate': OneAndSamePersonCertification,
+        'Unemployment Certificate': CertificateOfUnemployment,
+        'Certificate of Appearance': CertificateOfAppearance,
+    }
+
+    def get(self, request):
+        approve_requests = []
+
+        for doc_type, model in self.models.items():
+            requests = model.objects.filter(status="Approved").values('date_requested', 'status').order_by('-date_requested')
+            for req in requests:
+                req['document_type'] = doc_type
+                approve_requests.append(req)
+
+        return JsonResponse(approve_requests, safe=False)
+
+class RejectedRequestsView(View):
+    models = {
+        'Certificate of Indigency': CertificateOfIndigency,
+        'Jobseeker Certification': JobseekerCertificationRequest,
+        'Certificate of Guardianship': CertificateOfGuardianshipRequest,
+        'Good Moral Certificate': CertificateOfGoodMoralCharacterRequest,
+        'Business Certificate': BarangayBusinessCertificateRequest,
+        'Barangay Clearance': BarangayClearanceRequest,
+        'Certification Request': CertificationRequest,
+        'Certificate of Residency': CertificateOfResidency,
+        'One and Same Person Certificate': OneAndSamePersonCertification,
+        'Unemployment Certificate': CertificateOfUnemployment,
+        'Certificate of Appearance': CertificateOfAppearance,
+    }
+
+    def get(self, request):
+        reject_requests = []
+
+        for doc_type, model in self.models.items():
+            requests = model.objects.filter(status="Rejected").values('date_requested', 'status').order_by('-date_requested')
+            for req in requests:
+                req['document_type'] = doc_type
+                reject_requests.append(req)
+
+        return JsonResponse(reject_requests, safe=False)
+
+
+
+
+
+
+
+
+class ViewPrograms(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):
+    template_name = 'residents/view_programs.html'
 
 #Submitted Documents
 class ResidentDocumentSubmitted(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):
@@ -54,11 +235,7 @@ class ResidentDocumentApplyPrograms(LoginRequiredMixin, ResidentRequiredMixin, T
 #borrow
 class InventoryBorrow(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):
     template_name = 'residents/inventory_borrow.html'
-
-
-
-
-        
+   
 class CustomLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(request, "You have successfully logged out.")

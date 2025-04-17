@@ -5,7 +5,6 @@
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
             <div class="welcome-text">
-                <!-- Header -->
                 <h4>Barangay Equipment Inventory</h4>
             </div>
         </div>
@@ -16,8 +15,130 @@
             </ol>
         </div>
     </div>
+    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInventoryModal">
+        Add Inventory Item
+    </button>
+
+    <!-- Add Inventory Modal -->
+<div class="modal fade" id="addInventoryModal" tabindex="-1" role="dialog" aria-labelledby="addInventoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form method="POST" action="{% url 'lgu_admin:inventory_items' %}">
+        {% csrf_token %}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addInventoryModalLabel">Add Inventory Item</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+            <div class="form-group">
+              <label for="itemName">Name</label>
+              <input type="text" class="form-control" name="name" id="itemName" required>
+            </div>
+  
+            <div class="form-group">
+              <label for="itemDescription">Description</label>
+              <textarea class="form-control" name="description" id="itemDescription"></textarea>
+            </div>
+  
+            <div class="form-group">
+              <label for="itemCategory">Category</label>
+              <select class="form-control" name="category" id="itemCategory" required>
+                <option value="">-- Select Category --</option>
+                {% for cat in categories %}
+                  <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for="itemQuantity">Quantity</label>
+              <input type="number" class="form-control" name="quantity" id="itemQuantity" required>
+            </div>
+  
+            <div class="form-group">
+              <label for="itemUnit">Unit</label>
+              <input type="text" class="form-control" name="unit" id="itemUnit" value="pcs">
+            </div>
+  
+            <div class="form-group">
+              <label for="criticalLevel">Critical Level</label>
+              <input type="number" class="form-control" name="critical_level" id="criticalLevel" value="5">
+            </div>
+  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Item</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% for item in items %}
+<div class="modal fade" id="editInventoryModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="editInventoryModalLabel{{ item.id }}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form method="POST" action="{% url 'lgu_admin:update_inventory_item' item.id %}">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editInventoryModalLabel{{ item.id }}">Edit Inventory Item</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="itemName{{ item.id }}">Name</label>
+            <input type="text" class="form-control" name="name" id="itemName{{ item.id }}" value="{{ item.name }}" required>
+          </div>
+
+          <div class="form-group">
+            <label for="itemDescription{{ item.id }}">Description</label>
+            <textarea class="form-control" name="description" id="itemDescription{{ item.id }}">{{ item.description }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="itemCategory{{ item.id }}">Category</label>
+            <select class="form-control" name="category" id="itemCategory{{ item.id }}" required>
+              {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if item.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="itemQuantity{{ item.id }}">Quantity</label>
+            <input type="number" class="form-control" name="quantity" id="itemQuantity{{ item.id }}" value="{{ item.quantity }}" required>
+          </div>
+
+          <div class="form-group">
+            <label for="itemUnit{{ item.id }}">Unit</label>
+            <input type="text" class="form-control" name="unit" id="itemUnit{{ item.id }}" value="{{ item.unit }}">
+          </div>
+
+          <div class="form-group">
+            <label for="criticalLevel{{ item.id }}">Critical Level</label>
+            <input type="number" class="form-control" name="critical_level" id="criticalLevel{{ item.id }}" value="{{ item.critical_level }}">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+  
     
-    <!-- Equipment Table -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -26,7 +147,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="example" class="display" style="min-width: 845px">
+                        <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -35,50 +156,41 @@
                                     <th>Quantity</th>
                                     <th>Condition</th>
                                     <th>Last Updated</th>
+                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Handheld Radio</td>
-                                    <td>Communication</td>
-                                    <td>15</td>
-                                    <td><span class="badge badge-success">Good</span></td>
-                                    <td>Feb 10, 2025</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>First Aid Kit</td>
-                                    <td>Medical</td>
-                                    <td>8</td>
-                                    <td><span class="badge badge-warning">Fair</span></td>
-                                    <td>Jan 15, 2025</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Flashlight</td>
-                                    <td>Emergency</td>
-                                    <td>20</td>
-                                    <td><span class="badge badge-success">Good</span></td>
-                                    <td>Feb 5, 2025</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Generator</td>
-                                    <td>Power Supply</td>
-                                    <td>2</td>
-                                    <td><span class="badge badge-danger">Damaged</span></td>
-                                    <td>Dec 30, 2024</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Fire Extinguisher</td>
-                                    <td>Safety</td>
-                                    <td>10</td>
-                                    <td><span class="badge badge-success">Good</span></td>
-                                    <td>Feb 1, 2025</td>
-                                </tr>
-                            </tbody>
+                                {% for item in items %}
+                                  <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.category.name }}</td>
+                                    <td>{{ item.quantity }} {{ item.unit }}</td>
+                                    <td>
+                                      {% if item.quantity == 0 %}
+                                        <span class="badge badge-danger">Out of Stock</span>
+                                      {% elif item.is_below_critical %}
+                                        <span class="badge badge-warning">Critical</span>
+                                      {% else %}
+                                        <span class="badge badge-success">Good</span>
+                                      {% endif %}
+                                    </td>
+                                    <td>{{ item.last_updated|date:"M d, Y" }}</td>
+                                    <td>
+                                      <button class="btn btn-sm btn-info"
+                                              data-toggle="modal"
+                                              data-target="#editInventoryModal{{ item.id }}">
+                                          Edit
+                                      </button>
+                                    </td>
+                                  </tr>
+                                {% empty %}
+                                  <tr>
+                                    <td colspan="7" class="text-center">No inventory items found.</td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
                             <tfoot>
                                 <tr>
                                     <th>#</th>
@@ -87,6 +199,7 @@
                                     <th>Quantity</th>
                                     <th>Condition</th>
                                     <th>Last Updated</th>
+                                    <th>Actions</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -96,5 +209,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

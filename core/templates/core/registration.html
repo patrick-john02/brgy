@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Registration</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'logos/isab2.png'%} ">
+    <link href="{% static 'focus/css/style.css'%}" rel="stylesheet">
+</head>
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container-fluid h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+                                    <h4 class="text-center mb-4">Resident Registration Form</h4>
+
+                                    {% if error %}
+                                    <p style="color: red;">{{ error }}</p>
+                                    {% endif %}
+                                    <form method="POST" action="">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label><strong>First Name</strong></label>
+                                            <input type="text" class="form-control" name="first_name" placeholder="First Name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Middle Name</strong></label>
+                                            <input type="text" class="form-control" name="middle_name" placeholder="Middle Name" value="{{ form.middle_name.value|default_if_none:'' }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Last Name</strong></label>
+                                            <input type="text" class="form-control" name="last_name" placeholder="Last Name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Suffix</strong></label>
+                                            <input type="text" class="form-control" name="suffix" placeholder="Jr, Sr, II, III, etc." value="{{ form.suffix.value|default_if_none:'' }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Username</strong></label>
+                                            <input type="text" class="form-control" name="username" placeholder="Username" value="{{ form.username.value|default_if_none:'' }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Email</strong></label>
+                                            <input type="email" class="form-control" name="email" placeholder="hello@example.com" value="{{ form.email.value|default_if_none:'' }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Password</strong></label>
+                                            <input type="password" class="form-control" name="password1" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Confirm Password</strong></label>
+                                            <input type="password" class="form-control" name="password2" required>
+                                        </div>
+                                    
+                                        <!-- Error message -->
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                <div class="alert alert-danger">{{ message }}</div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-block">Sign me up</button>
+                                        </div>
+                                    </form>
+                                    
+                                    <div class="new-account mt-3">
+                                        <p>Already have an account? <a class="text-primary" href="{% url 'core:login'%}">Sign in</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="{% static 'focus/vendor/global/global.min.js'%}"></script>
+    <script src="{% static 'focus/js/quixnav-init.js'%}"></script>
+</body>
+</html>

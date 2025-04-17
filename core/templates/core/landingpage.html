@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Barangay Calamagui North</title>
+  <title>Barangay Bangad Santa Maria Isabela</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-   <link href="{% static 'landing/assets/img/headlogo.png'%}" rel="icon"> 
+   <link href="{% static 'landing/assets/img/bangadlogofinal.png'%}" rel="icon"> 
  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> 
 
   <!-- Fonts -->
@@ -38,14 +38,14 @@
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
       <a href="{% url 'core:landing' %}" class="logo d-flex align-items-center me-auto">
-        <img src="{% static 'landing/assets/img/headlogo.png'%}" alt="">
-        <h1 class="sitename">Calamagui Isabela North</h1>
+        <img src="{% static 'landing/assets/img/bangadlogofinal.png'%}" alt="">
+        <h1 class="sitename"> Bangad Santa Maria Isabela</h1>
       </a>
 
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#announcement">Announcement</a></li>
+          {% comment %} <li><a href="#announcement">Announcement</a></li> {% endcomment %}
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Employees</a></li>
@@ -62,9 +62,9 @@
 
    <!-- Hero Section -->
 <section id="hero" class="hero section dark-background">
-  <img src="{% static 'landing/assets/img/hero-bg.jpg' %}" alt="" data-aos="fade-in">
+  <img src="{% static 'landing/assets/img/herobg.jpg' %}" alt="" data-aos="fade-in">
   <div class="container d-flex flex-column align-items-center">
-    <h2 data-aos="fade-up" data-aos-delay="100">Official Website of Barangay Calamagui North</h2>
+    <h2 data-aos="fade-up" data-aos-delay="100">Official Website of Barangay Bangad</h2>
     <p data-aos="fade-up" data-aos-delay="200">Welcome to our official website!</p>
     <div class="d-flex mt-4" data-aos="fade-up" data-aos-delay="300">
       <!-- Optional buttons or links can go here -->
@@ -80,27 +80,27 @@
 
         <div class="row gy-4">
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-              <h3>About Barangay Calamagui</h3>
-              <img src="{% static 'landing/assets/img/about/1.jpg'%}" class="img-fluid rounded-4 mb-4" alt="Barangay Calamagui">
-              <p>Barangay Calamagui West is a vibrant and growing community located in the municipality of Santa Maria, Isabela. As of the 2020 Census, it has a population of 926 residents, accounting for 3.59% of the municipality's total population. The barangay is home to diverse age groups, with a strong workforce comprising 64.28% of its residents, while youth and senior citizens make up the remaining population.</p>
-              <p>Strategically positioned at approximately 17.4849° N latitude and 121.7658° E longitude, Calamagui West sits at an elevation of 31.8 meters above sea level. The barangay shares borders with several neighboring communities, fostering close ties with its surrounding areas. With a median age of 24, the barangay boasts a dynamic and youthful population contributing to its economic and social development.</p>
+              <h3>About Barangay Bangad</h3>
+              <img src="{% static 'landing/assets/img/about/4.jpg'%}" class="img-fluid rounded-4 mb-4" alt="Barangay Bangad">
+              <p>Barangay Bangad is a thriving community located in the Municipality of Santa Maria, Isabela. As of the 2020 Census, it has a population of 2,932 residents, representing 11.38% of the municipality's total population. The barangay has a diverse age distribution, with the majority of its residents belonging to the working-age group (15-64 years), comprising 62.25% of the population, while young dependents (aged 14 and below) make up 34.13%.</p>
+              <p>Strategically positioned at approximately 17.4953° N latitude and 121.7802° E longitude, Barangay Bangad is situated at an elevation of 33.1 meters above sea level. The barangay maintains strong connections with its neighboring communities and continues to play a key role in local economic and social development. With a median age of 21, the barangay fosters a dynamic and youthful population that contributes to its progress.</p>
           </div>
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="250">
               <div class="content ps-0 ps-lg-5">
                   <p class="fst-italic">
-                      Committed to progress and community welfare, Barangay Calamagui West actively promotes livelihood programs, health services, and local initiatives for sustainable development.
+                      Dedicated to the well-being and advancement of its residents, Barangay Bangad actively promotes community development programs, economic empowerment, and sustainable initiatives.
                   </p>
                   <ul>
-                      <li><i class="bi bi-check-circle-fill"></i> <span>Active community programs, including free medical check-ups and training for livelihood opportunities.</span></li>
-                      <li><i class="bi bi-check-circle-fill"></i> <span>Focus on disaster preparedness and sustainable development projects.</span></li>
-                      <li><i class="bi bi-check-circle-fill"></i> <span>Strong emphasis on education, youth development, and economic empowerment.</span></li>
+                      <li><i class="bi bi-check-circle-fill"></i> <span>Implementation of community programs, including health services and livelihood training.</span></li>
+                      <li><i class="bi bi-check-circle-fill"></i> <span>Emphasis on disaster preparedness and environmental sustainability.</span></li>
+                      <li><i class="bi bi-check-circle-fill"></i> <span>Strong support for education, youth development, and economic initiatives.</span></li>
                   </ul>
                   <p>
-                      The barangay remains committed to fostering a safe and progressive environment for its residents, ensuring access to essential services, and strengthening community resilience for future generations.
+                      Barangay Bangad remains committed to fostering a secure and progressive environment for its residents, ensuring access to essential services, and strengthening community resilience for future generations.
                   </p>
       
                   <div class="position-relative mt-4">
-                      <img src="{% static 'landing/assets/img/about/2.jpg'%}" class="img-fluid rounded-4" alt="Community Development in Calamagui">
+                      <img src="{% static 'landing/assets/img/about/1.jpg'%}" class="img-fluid rounded-4" alt="Community Development in Bangad">
                   </div>
             </div>
           </div>
@@ -109,8 +109,7 @@
       </div>
 
     </section><!-- /About Section -->
-
-    <!-- Stats Section -->
+   <!-- Stats Section -->
 <section id="stats" class="stats section light-background">
   <div class="container" data-aos="fade-up" data-aos-delay="100">
     <div class="row gy-4">
@@ -119,7 +118,7 @@
         <div class="stats-item d-flex align-items-center w-100 h-100">
           <i class="bi bi-gender-male color-blue flex-shrink-0"></i>
           <div>
-            <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="{{ total_male }}" data-purecounter-duration="1" class="purecounter"></span>
             <p>Male</p>
           </div>
         </div>
@@ -129,7 +128,7 @@
         <div class="stats-item d-flex align-items-center w-100 h-100">
           <i class="bi bi-gender-female color-orange flex-shrink-0"></i>
           <div>
-            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="{{ total_female }}" data-purecounter-duration="1" class="purecounter"></span>
             <p>Female</p>
           </div>
         </div>
@@ -139,7 +138,7 @@
         <div class="stats-item d-flex align-items-center w-100 h-100">
           <i class="bi bi-people color-green flex-shrink-0"></i>
           <div>
-            <span data-purecounter-start="0" data-purecounter-end="1463" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="{{ total_population }}" data-purecounter-duration="1" class="purecounter"></span>
             <p>Total Population</p>
           </div>
         </div>
@@ -149,127 +148,51 @@
         <div class="stats-item d-flex align-items-center w-100 h-100">
           <i class="bi bi-house-door color-pink flex-shrink-0"></i>
           <div>
-            <span data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="{{ total_households }}" data-purecounter-duration="1" class="purecounter"></span>
             <p>Total Households</p>
           </div>
         </div>
       </div><!-- End Stats Item -->
-
     </div>
   </div>
 </section>
-        </div>
-      </div>
-    </section><!-- /Stats Section -->
 
+   <!-- Services Section -->
+<section id="services" class="services section">
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <p>Services<br></p>
+  </div>
 
-    <!-- Services Section -->
-    <section id="services" class="services section">
-    
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <p>Services<br></p>
-      </div><!-- End Section Title -->
-    
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-    
-        <div class="row gy-5">
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/health.jpg'%}" class="img-fluid" alt="Free Health Check-Up">
-              </div>
-              <div class="details position-relative">
-               
-                <span class="service-title">
-                  <h3>Free Health Check-Up</h3>
-                </span>
-                <p>Providing free medical consultations, health screenings, and wellness programs for the community to promote overall well-being.</p>
-              </div>
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="row gy-5">
+      
+      {% for service in services %}
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:2 }}00">
+          <div class="service-item">
+            <div class="img">
+              {% if service.image %}
+                <img src="{{ service.image.url }}" class="img-fluid" alt="{{ service.title }}">
+              {% else %}
+                <img src="{% static 'landing/assets/img/default-service.jpg' %}" class="img-fluid" alt="Default Image">
+              {% endif %}
             </div>
-          </div><!-- End Service Item -->
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/livelihood.jpg'%}" class="img-fluid" alt="Livelihood Training">
-              </div>
-              <div class="details position-relative">
-              
-                <span class="service-title">
-                  <h3>Livelihood Training Programs</h3>
-                </span>
-                <p>Workshops and skills development training to empower residents with knowledge and tools for self-sufficiency and employment opportunities.</p>
-              </div>
+            <div class="details position-relative">
+              <span class="service-title">
+                <h3>{{ service.title }}</h3>
+              </span>
+              <p>{{ service.description }}</p>
             </div>
-          </div><!-- End Service Item -->
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/clearance.jpg'%}" class="img-fluid" alt="Barangay Clearance">
-              </div>
-              <div class="details position-relative">
-                
-                <span class="service-title">
-                  <h3>Barangay Clearance</h3>
-                </span>
-                <p>Officially issued document for residents, certifying good standing in the community and often required for employment and legal purposes.</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="500">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/disaster.jpg'%}" class="img-fluid" alt="Disaster Preparedness">
-              </div>
-              <div class="details position-relative">
-                
-                <span class="service-title">
-                  <h3>Disaster Preparedness Seminars</h3>
-                </span>
-                <p>Educational sessions on disaster response, emergency evacuation, and community resilience to ensure safety during calamities.</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="600">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/feeding.jpg'%}" class="img-fluid" alt="Feeding Program">
-              </div>
-              <div class="details position-relative">
-                
-                <span class="service-title">
-                  <h3>Community Feeding Program</h3>
-                </span>
-                <p>Regular meal distribution to children and underprivileged residents, ensuring proper nutrition and support for those in need.</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-    
-          <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="700">
-            <div class="service-item">
-              <div class="img">
-                <img src="{% static 'landing/assets/img/clean.jpg'%}" class="img-fluid" alt="Waste Management">
-              </div>
-              <div class="details position-relative">
-               
-                <span class="service-title">
-                  <h3>Waste Management & Clean-Up Drive</h3>
-                </span>
-                <p>Regular clean-up drives and waste segregation initiatives to maintain a healthy and sustainable environment for the community.</p>
-              </div>
-            </div>
-          </div><!-- End Service Item -->
-    
-        </div>
-    
-      </div>
-    
-    </section><!-- /Services Section -->
+          </div>
+        </div><!-- End Service Item -->
+      {% empty %}
+        <p class="text-center">No services available at the moment.</p>
+      {% endfor %}
+      
+    </div>
+  </div>
+</section>
+
     
 
    
@@ -278,111 +201,38 @@
 <section id="features" class="features section">
   <div class="container">
 
+    <!-- Dynamic Navigation Tabs -->
     <ul class="nav nav-tabs row d-flex" data-aos="fade-up" data-aos-delay="100">
-      <li class="nav-item col-3">
-        <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
-         
-          <h4 class="d-none d-lg-block">Greener Barangay Project</h4>
-        </a>
-      </li>
-      <li class="nav-item col-3">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
-         
-          <h4 class="d-none d-lg-block">Housing Assistance Program</h4>
-        </a>
-      </li>
-      <li class="nav-item col-3">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
-         
-          <h4 class="d-none d-lg-block">Youth Empowerment Initiative</h4>
-        </a>
-      </li>
-      <li class="nav-item col-3">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-4">
-          
-          <h4 class="d-none d-lg-block">Solar Streetlight Installation</h4>
-        </a>
-      </li>
+      {% for project in projects %}
+        <li class="nav-item col-3">
+          <a class="nav-link {% if forloop.first %}active show{% endif %}" data-bs-toggle="tab" data-bs-target="#features-tab-{{ forloop.counter }}">
+            <h4 class="d-none d-lg-block">{{ project.title }}</h4>
+          </a>
+        </li>
+      {% empty %}
+        <p class="text-center">No projects available.</p>
+      {% endfor %}
     </ul><!-- End Tab Nav -->
 
+    <!-- Dynamic Tab Content -->
     <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
-
-      <div class="tab-pane fade active show" id="features-tab-1">
-        <div class="row">
-          <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0">
-            <h3>Greener Barangay Project</h3>
-            <p class="fst-italic">
-              A community-led tree planting and waste management initiative aimed at promoting a cleaner and greener environment.
-            </p>
-            <ul>
-              <li><i class="bi bi-check2-all"></i> Free tree seedlings for residents.</li>
-              <li><i class="bi bi-check2-all"></i> Monthly clean-up drives and waste segregation campaigns.</li>
-              <li><i class="bi bi-check2-all"></i> Environmental awareness seminars for households and schools.</li>
-            </ul>
+      {% for project in projects %}
+        <div class="tab-pane fade {% if forloop.first %}active show{% endif %}" id="features-tab-{{ forloop.counter }}">
+          <div class="row">
+            <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0">
+              <h3>{{ project.title }}</h3>
+              <p class="fst-italic">{{ project.description }}</p>
+            </div>
+            <div class="col-lg-6 order-1 order-lg-2 text-center">
+              {% if project.image %}
+                <img src="{{ project.image.url }}" alt="{{ project.title }}" class="img-fluid">
+              {% else %}
+                <img src="{% static 'landing/assets/img/default-project.jpg' %}" alt="Default Project" class="img-fluid">
+              {% endif %}
+            </div>
           </div>
-          <div class="col-lg-6 order-1 order-lg-2 text-center">
-            <img src="{% static 'landing/assets/img/programs/1.png'%}" alt="" class="img-fluid">
-          </div>
-        </div>
-      </div><!-- End Tab Content Item -->
-
-      <div class="tab-pane fade" id="features-tab-2">
-        <div class="row">
-          <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0">
-            <h3>Housing Assistance Program</h3>
-            <p>
-              Providing financial and material support for low-income families in need of home repairs and sustainable housing solutions.
-            </p>
-            <ul>
-              <li><i class="bi bi-check2-all"></i> Subsidized construction materials for qualified households.</li>
-              <li><i class="bi bi-check2-all"></i> Collaboration with NGOs and government agencies for affordable housing solutions.</li>
-              <li><i class="bi bi-check2-all"></i> Disaster-resilient housing workshops for residents.</li>
-            </ul>
-          </div>
-          <div class="col-lg-6 order-1 order-lg-2 text-center">
-            <img src="{% static 'landing/assets/img/programs/2.png'%}" alt="" class="img-fluid">
-          </div>
-        </div>
-      </div><!-- End Tab Content Item -->
-
-      <div class="tab-pane fade" id="features-tab-3">
-        <div class="row">
-          <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0">
-            <h3>Youth Empowerment Initiative</h3>
-            <p>
-              A series of workshops, scholarships, and leadership programs to support youth development and education.
-            </p>
-            <ul>
-              <li><i class="bi bi-check2-all"></i> Free IT and vocational skills training.</li>
-              <li><i class="bi bi-check2-all"></i> Barangay-sponsored scholarships for underprivileged students.</li>
-              <li><i class="bi bi-check2-all"></i> Leadership and sports development programs for young residents.</li>
-            </ul>
-          </div>
-          <div class="col-lg-6 order-1 order-lg-2 text-center">
-            <img src="{% static 'landing/assets/img/programs/3.png'%}" alt="" class="img-fluid">
-          </div>
-        </div>
-      </div><!-- End Tab Content Item -->
-
-      <div class="tab-pane fade" id="features-tab-4">
-        <div class="row">
-          <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0">
-            <h3>Solar Streetlight Installation</h3>
-            <p>
-              Enhancing community safety and energy efficiency by installing solar-powered streetlights in key areas.
-            </p>
-            <ul>
-              <li><i class="bi bi-check2-all"></i> Improved visibility and security at night.</li>
-              <li><i class="bi bi-check2-all"></i> Reduced electricity costs through sustainable energy solutions.</li>
-              <li><i class="bi bi-check2-all"></i> Installation in high-traffic and remote areas to prevent accidents and crimes.</li>
-            </ul>
-          </div>
-          <div class="col-lg-6 order-1 order-lg-2 text-center">
-            <img src="{% static 'landing/assets/img/programs/4.png'%}" alt="" class="img-fluid">
-          </div>
-        </div>
-      </div><!-- End Tab Content Item -->
-
+        </div><!-- End Tab Content Item -->
+      {% endfor %}
     </div>
   </div>
 </section>
@@ -456,121 +306,48 @@
       
   <!-- Portfolio Section -->
 <section id="portfolio" class="portfolio section">
-  <!-- Section Title -->
   <div class="container section-title" data-aos="fade-up">
     <p>Barangay Officials</p>
   </div>
-  
+
   <div class="container">
     <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
-      
+
       <!-- Filter Buttons -->
       <ul class="portfolio-filters isotope-filters" data-aos="fade-up" data-aos-delay="100">
-        <li data-filter="*" class="filter-active">All</li>
-        <li data-filter=".filter-captain">Barangay Captain</li>
-        <li data-filter=".filter-kagawad">Kagawad</li>
-        <li data-filter=".filter-secretary">Barangay Secretary</li>
+        {% comment %} <li data-filter="*" class="filter-active">All</li> {% endcomment %}
+        <li data-filter=".filter-captain">BHS BANGAD DRRM-H</li>
+        <li data-filter=".filter-kagawad">Barangay Officials</li>
+        {% comment %} <li data-filter=".filter-secretary">Barangay Secretary</li>
         <li data-filter=".filter-treasurer">Barangay Treasurer</li>
-        <li data-filter=".filter-skp">SK Chairman</li>
+        <li data-filter=".filter-skp">SK Chairman</li> {% endcomment %}
       </ul>
 
       <!-- Officials List -->
       <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
-
-        <!-- Barangay Captain -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-captain">
+        
+        {% for official in brgy_officials %}
+        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-{{ official.position }}">
           <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
+            <img src="{% if official.profile_image %}{{ official.profile_image.url }}{% else %}{% static 'landing/assets/img/officials/default.jpg' %}{% endif %}" 
+                 class="img-fluid" alt="{{ official.user.get_full_name }}">
             <div class="portfolio-info">
-              <h4>Juan Dela Cruz</h4>
-              <p>Barangay Captain</p>
-              <a href="assets/img/officials/captain.jpg" title="Juan Dela Cruz - Barangay Captain" 
+              <h4>{{ official.user.get_full_name }}</h4>
+              <p>{{ official.get_position_display }}</p>
+              <a href="{% if official.profile_image %}{{ official.profile_image.url }}{% else %}{% static 'landing/assets/img/officials/default.jpg' %}{% endif %}" 
+                 title="{{ official.user.get_full_name }} - {{ official.get_position_display }}" 
                  data-gallery="portfolio-gallery" class="glightbox preview-link">
                  <i class="bi bi-zoom-in"></i>
               </a>
             </div>
           </div>
         </div>
-
-        <!-- Kagawads -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-kagawad">
-          <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
-            <div class="portfolio-info">
-              <h4>Pedro Santos</h4>
-              <p>Kagawad</p>
-              <a href="assets/img/officials/kagawad1.jpg" title="Pedro Santos - Kagawad" 
-                 data-gallery="portfolio-gallery" class="glightbox preview-link">
-                 <i class="bi bi-zoom-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-kagawad">
-          <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
-            <div class="portfolio-info">
-              <h4>Maria Lopez</h4>
-              <p>Kagawad</p>
-              <a href="assets/img/officials/kagawad2.jpg" title="Maria Lopez - Kagawad" 
-                 data-gallery="portfolio-gallery" class="glightbox preview-link">
-                 <i class="bi bi-zoom-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Barangay Secretary -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-secretary">
-          <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
-            <div class="portfolio-info">
-              <h4>Ana Reyes</h4>
-              <p>Barangay Secretary</p>
-              <a href="assets/img/officials/secretary.jpg" title="Ana Reyes - Secretary" 
-                 data-gallery="portfolio-gallery" class="glightbox preview-link">
-                 <i class="bi bi-zoom-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Barangay Treasurer -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-treasurer">
-          <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
-            <div class="portfolio-info">
-              <h4>Ricardo Fernandez</h4>
-              <p>Barangay Treasurer</p>
-              <a href="assets/img/officials/treasurer.jpg" title="Ricardo Fernandez - Treasurer" 
-                 data-gallery="portfolio-gallery" class="glightbox preview-link">
-                 <i class="bi bi-zoom-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- SK Chairman -->
-        <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-skp">
-          <div class="portfolio-content h-100">
-            <img src="{% static 'landing/assets/img/officials/profile.jpg'%}" class="img-fluid" alt="Barangay Captain">
-            <div class="portfolio-info">
-              <h4>Daniel Cruz</h4>
-              <p>SK Chairman</p>
-              <a href="assets/img/officials/sk-chairman.jpg" title="Daniel Cruz - SK Chairman" 
-                 data-gallery="portfolio-gallery" class="glightbox preview-link">
-                 <i class="bi bi-zoom-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
+        {% endfor %}
+        
       </div><!-- End Portfolio Container -->
     </div>
   </div>
 </section><!-- /Portfolio Section -->
-
 
  
 <!-- Barangay Reporting Form Section -->
@@ -615,24 +392,25 @@
       </div>
 
       <div class="col-lg-6">
-        <form id="reportForm" action="#" method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
           <div class="row gy-4">
             <div class="col-md-6">
-              <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+              <input type="text" name="name" class="form-control" placeholder="Your Name" value="{{ form.name.value|default_if_none:'' }}" required>
             </div>
             <div class="col-md-6">
-              <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+              <input type="email" class="form-control" name="email" placeholder="Your Email" value="{{ form.email.value|default_if_none:'' }}" required>
             </div>
             <div class="col-md-12">
               <select class="form-control" name="report_type" required>
-                <option value="" disabled selected>Select Report Type</option>
-                <option value="complaint">Complaint</option>
-                <option value="incident">Incident</option>
-                <option value="accident">Accident</option>
+                <option value="" disabled {% if not form.report_type.value %}selected{% endif %}>Select Report Type</option>
+                <option value="complaint" {% if form.report_type.value == "complaint" %}selected{% endif %}>Complaint</option>
+                <option value="incident" {% if form.report_type.value == "incident" %}selected{% endif %}>Incident</option>
+                <option value="accident" {% if form.report_type.value == "accident" %}selected{% endif %}>Accident</option>
               </select>
             </div>
             <div class="col-md-12">
-              <textarea class="form-control" name="description" rows="4" placeholder="Describe the incident or complaint" required></textarea>
+              <textarea class="form-control" name="description" rows="4" placeholder="Describe the incident or complaint" required>{{ form.description.value|default_if_none:'' }}</textarea>
             </div>
             <div class="col-md-12">
               <label for="imageUpload">Upload an Image (Optional)</label>
@@ -643,6 +421,7 @@
             </div>
           </div>
         </form>
+        
       </div><!-- End Report Form -->
 
     </div>
@@ -650,29 +429,122 @@
   </div>
 
 </section><!-- /Barangay Reporting Form Section -->
+  </main>
+  <style>
+    /* Sticky AI Chat Icon */
+    .chatbot-icon {
+      position: fixed;
+      bottom: 20px;
+      left: 20px; /* Changed to right */
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 14px;
+      z-index: 9999;
+    }
+  
+    /* Chat Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      bottom: 80px; /* Avoid overlap */
+      left: 20px; /* Modal now on the right */
+      width: 350px;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      z-index: 9999;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  
+    .modal-content {
+      padding: 15px;
+    }
+  
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+    }
+  
+    .chatbox {
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+  
+    .user-message {
+      text-align: right;
+      margin-bottom: 5px;
+    }
+  
+    .ai-message {
+      text-align: left;
+      margin-bottom: 5px;
+      background-color: #f1f1f1;
+      padding: 5px 10px;
+      border-radius: 8px;
+    }
+  </style>
 
+ <!-- AI Chat Button (Sticky) -->
+<div class="chatbot-icon" onclick="openChatModal()">
+  🤖 AI Assistant
+</div>
+
+<!-- AI Chat Modal -->
+<div id="chatModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeChatModal()">&times;</span>
+    <h5>Chat with AI Assistant</h5>
+    <div id="chatbox" class="chatbox"></div>
+    <input type="text" id="userInput" class="form-control" placeholder="Ask something...">
+    <button onclick="sendMessage()" class="btn btn-primary mt-2">Send</button>
+  </div>
+</div>
 <script>
-  document.getElementById("reportForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const formData = new FormData(this);
+  // Open Modal
+  function openChatModal() {
+    document.getElementById('chatModal').style.display = 'block';
+  }
 
-    fetch('/api/reports/', {
+  // Close Modal
+  function closeChatModal() {
+    document.getElementById('chatModal').style.display = 'none';
+  }
+
+  // Send User Message to AI
+  function sendMessage() {
+    const userInput = document.getElementById('userInput').value;
+    const chatbox = document.getElementById('chatbox');
+
+    // Append User Message
+    chatbox.innerHTML += `<div class="user-message"><strong>You:</strong> ${userInput}</div>`;
+
+    // Send to Backend AI
+    fetch('/ai-response/', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}' 
+      },
+      body: JSON.stringify({'message': userInput})
     })
     .then(response => response.json())
     .then(data => {
-      alert(data.message);
-      // Reset form or handle UI update
-    })
-    .catch(error => {
-      alert('Error submitting report');
-      console.error(error);
+      // Append AI Response
+      chatbox.innerHTML += `<div class="ai-message"><strong>AI:</strong> ${data.response}</div>`;
     });
-  });
+
+    // Clear Input Field
+    document.getElementById('userInput').value = '';
+  }
 </script>
 
-  </main>
 
   <footer id="footer" class="footer dark-background">
 
@@ -734,6 +606,7 @@
     <div class="container copyright text-center mt-4">
     </div>
   </footer>
+
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

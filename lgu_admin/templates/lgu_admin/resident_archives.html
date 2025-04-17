@@ -1,0 +1,86 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Archived Residents</h4>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'lgu_admin:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'lgu_admin:archived_residents' %}">Archived Residents</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">List of Archived Residents</h4>
+                    <div class="d-flex" style="gap: 10px;">
+                        <a href="{% url 'lgu_admin:residents_list' %}" class="btn btn-secondary">Back to Active Residents</a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="display" style="min-width: 845px">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Full Name</th>
+                                    <th>Gender</th>
+                                    <th>Civil Status</th>
+                                    <th>Address</th>
+                                    <th>Barangay Zone</th>
+                                    <th>Contact</th>
+                                    <th>Household</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for resident in residents %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'lgu_admin:resident_details' resident.id %}" class="text-primary">
+                                            {{ resident.full_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ resident.get_gender_display }}</td>
+                                    <td>{{ resident.get_civil_status_display }}</td>
+                                    <td>{{ resident.address }}</td>
+                                    <td>{{ resident.barangay_zone|default:"N/A" }}</td>
+                                    <td>{{ resident.contact_number }}</td>
+                                    <td>
+                                        {% if resident.household %}
+                                            {{ resident.household.household_number }}
+                                        {% else %}
+                                            <span class="badge badge-secondary">No Household</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span class="badge badge-danger">Archived</span></td>
+                                    <td>
+                                        <form action="{% url 'lgu_admin:unarchive_resident' resident.id %}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" class="text-center">No archived residents found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

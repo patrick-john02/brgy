@@ -1,0 +1,395 @@
+{% extends "residents/includes/base.html" %}
+{% block content %}
+{% load static %}
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4>Hi, welcome back!</h4>
+                            <span class="ml-1">Email</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Request</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Document</a></li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="email-left-box px-0 mb-5">
+                                    <div class="p-0">
+                                        <a href="#" class="btn btn-primary btn-block">Document Request</a>
+                                    </div>
+                                    <div class="mail-list mt-4">
+                                        <a href="javascript:void()" id="pendingRequests" class="list-group-item">
+                                            <i class="fa fa-paper-plane font-18 align-middle mr-2"></i>Pending
+                                        </a>
+                                         <a href="javascript:void()" id="approvedRequests" class="list-group-item"><i
+                                            class="fa fa-star-o font-18 align-middle mr-2"></i>Approved
+                                    </a>
+                                        <a href="javascript:void()" id="rejectedRequests" class="list-group-item"><i
+                                                class="fa fa-trash font-18 align-middle mr-2"></i>Rejected</a>
+                                    </div>
+                                    
+                                    <div class="intro-title d-flex justify-content-between align-items-center" id="toggleCategories">
+                                        <h5>Document Categories</h5>
+                                        <i class="fa fa-chevron-down" aria-hidden="true" id="toggleIcon"></i>
+                                    </div>
+                                    <div class="mail-list mt-4" id="categoryList" style="display: none;">
+                                        <a href="javascript:void()" class="list-group-item" data-document="Jobseeker Certification">
+                                            <span class="icon-warning"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certification (First Time Jobseekers Assistance Act - RA 11261)
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certificate of Guardianship">
+                                            <span class="icon-primary"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certificate of Guardianship
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certificate of Good Moral Character">
+                                            <span class="icon-success"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certificate of Good Moral Character
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Barangay Business Certificate">
+                                            <span class="icon-dpink"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Barangay Business Certificate
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Barangay Clearance">
+                                            <span class="icon-warning"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Barangay Clearance
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certification Request">
+                                            <span class="icon-dpink"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certification Request
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certificate of Residency">
+                                            <span class="icon-success"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certificate of Residency
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="One and the Same Person Certification">
+                                            <span class="icon-dpink"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certification (One and the Same Person)
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certificate of Unemployment">
+                                            <span class="icon-warning"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certificate of Unemployment
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certification of Indigency">
+                                            <span class="icon-primary"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certification of Indigency
+                                        </a>
+                                        <a href="javascript:void()" class="list-group-item" data-document="Certification of Appearance">
+                                            <span class="icon-success"><i class="fa fa-circle" aria-hidden="true"></i></span>
+                                            Certification of Appearance
+                                        </a>
+                                        
+                                        
+                                    </div>
+                                </div>
+                                    
+                                    
+                                    
+                                    <!--Main display for the sidebar-->
+                                <div class="email-right-box ml-0 ml-sm-4 ml-sm-0">
+                                    <div class="toolbar mb-4" role="toolbar">
+                                    </div>
+                                    <div id="formContainer" class="compose-content">
+                                        <h5>Select a document from the left side to request</h5>
+                                      
+                                    </div>
+                                    {% comment %} <div class="text-left mt-4 mb-5">
+                                        <button class="btn btn-primary btn-sl-sm mr-3" type="button"><span
+                                                class="mr-2"><i class="fa fa-paper-plane"></i></span> Send</button>
+                                        <button class="btn btn-dark btn-sl-sm" type="button"><span class="mr-2"><i
+                                                    class="fa fa-times" aria-hidden="true"></i></span> Discard</button>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!-- Modal -->
+<div class="modal fade" id="claimCertificateModal" tabindex="-1" role="dialog" aria-labelledby="claimCertificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Claim Your Certificate</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                Please visit your barangay hall to claim your certificate.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+  
+            <style>
+                #categoryList {
+                    max-height: 300px;
+                    overflow-y: auto; 
+                }
+            </style>                
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const toggleIcon = document.getElementById('toggleIcon');
+                    const categoryList = document.getElementById('categoryList');
+                    const formContainer = document.getElementById('formContainer');
+                    const pendingBtn = document.getElementById('pendingRequests');
+                    const approvedBtn = document.getElementById('approvedRequests');
+                    const rejectedBtn = document.getElementById('rejectedRequests');
+                
+                    // Toggle category display
+                    document.getElementById('toggleCategories').addEventListener('click', function () {
+                        categoryList.style.display = (categoryList.style.display === 'none') ? 'block' : 'none';
+                        toggleIcon.classList.toggle('fa-chevron-down');
+                        toggleIcon.classList.toggle('fa-chevron-up');
+                    });
+                
+                    // Handle form display based on selected category
+                    const documentLinks = document.querySelectorAll('.mail-list a');
+                
+                    documentLinks.forEach(link => {
+                        link.addEventListener('click', function () {
+                            const documentType = link.dataset.document; // Fetch data-document
+                            loadForm(documentType);
+                        });
+                    });
+                
+                    function loadForm(documentType) {
+                        let formHtml = '';
+                
+                        switch (documentType) {
+                            case 'Jobseeker Certification':
+                                formHtml = `{% csrf_token %} {{ jobseeker_form.as_p }}`;
+                                break;
+                            case 'Certificate of Guardianship':
+                                formHtml = `{% csrf_token %} {{ guardianship_form.as_p }}`;
+                                break;
+                            case 'Certificate of Good Moral Character':
+                                formHtml = `{% csrf_token %} {{ good_moral_form.as_p }}`;
+                                break;
+                            case 'Barangay Business Certificate':
+                                formHtml = `{% csrf_token %} {{ business_certificate_form.as_p }}`;
+                                break;
+                            case 'Barangay Clearance':
+                                formHtml = `{% csrf_token %} {{ barangay_clearance_form.as_p }}`;
+                                break;
+                            case 'Certification Request':
+                                formHtml = `{% csrf_token %} {{ certification_form.as_p }}`;
+                                break;
+                            case 'Certificate of Residency':
+                                formHtml = `{% csrf_token %} {{ residency_form.as_p }}`;
+                                break;
+                            case 'One and the Same Person Certification':
+                                formHtml = `{% csrf_token %} {{ one_and_same_person_form.as_p }}`;
+                                break;
+                            case 'Certificate of Unemployment':
+                                formHtml = `{% csrf_token %} {{ unemployment_form.as_p }}`;
+                                break;
+                            case 'Certification of Indigency':
+                                formHtml = `{% csrf_token %} {{ indigency_form.as_p }}`;
+                                break;
+                            case 'Certification of Appearance':
+                                formHtml = `{% csrf_token %} {{ appearance_form.as_p }}`;
+                                break;
+                            default:
+                                formHtml = `<h5>Select a valid document request</h5>`;
+                        }
+                
+                        formContainer.innerHTML = `
+                            <h5>${documentType}</h5>
+                            <form method="POST">
+                                ${formHtml}
+                                <input type="hidden" name="document_type" value="${documentType}">
+                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                            </form>
+                        `;
+                    }
+                
+                    pendingBtn.addEventListener('click', function () {
+                        fetch(`/residents/pending_requests/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let content = `<h5 class="text-center mb-3">All Pending Document Requests</h5>`;
+                                if (data.length > 0) {
+                                    content += `
+                                        <div class="table-responsive">
+                                            <table class="table table-hover table-bordered text-center">
+                                                <thead class="thead-dark">
+                                                    <tr>
+                                                        <th>Document Type</th>
+                                                        <th>Date Requested</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+                                    data.forEach(request => {
+                                        const formattedDate = formatDate(request.date_requested);
+                                        content += `
+                                            <tr>
+                                                <td>${request.document_type}</td>
+                                                <td>${formattedDate}</td>
+                                                <td>${request.status}</td>
+                                            </tr>`;
+                                    });
+                                    content += '</tbody></table></div>';
+                                } else {
+                                    content += '<p>No pending requests found.</p>';
+                                }
+                                formContainer.innerHTML = content;
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                    
+                    
+                    function formatDate(dateString) {
+                        const date = new Date(dateString);
+                        const options = { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric', 
+                            hour: 'numeric', 
+                            minute: 'numeric', 
+                            hour12: true 
+                        };
+                        return date.toLocaleDateString('en-US', options);
+                    }
+
+                    approvedBtn.addEventListener('click', function () {
+                        fetch(`/residents/approve_requests/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let content = '<h5>Approved Document Requests</h5>';
+                                if (data.length > 0) {
+                                    content += `
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Document Type</th>
+                                                    <th>Date Requested</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`;
+                                    data.forEach(request => {
+                                        content += `
+                                            <tr data-id="${request.id}" data-type="${request.document_type}">
+                                                <td>${request.document_type}</td>
+                                                <td>${formatDate(request.date_requested)}</td>
+                                                <td>
+                                                    <span class="badge badge-success open-modal-btn" 
+                                                          style="cursor: pointer;" 
+                                                          data-id="${request.id}" 
+                                                          data-type="${request.document_type}">
+                                                        ${request.status}
+                                                    </span>
+                                                </td>
+                                            </tr>`;
+                                    });
+                                    content += `</tbody></table>`;
+                                } else {
+                                    content += '<p>No approved requests found.</p>';
+                                }
+                    
+                                formContainer.innerHTML = content;
+                    
+                                // Attach event listeners to each "Status" badge
+                                document.querySelectorAll('.open-modal-btn').forEach(badge => {
+                                    badge.addEventListener('click', function () {
+                                        // Get the document details
+                                        const documentType = this.getAttribute('data-type');
+                    
+                                        // Update modal content dynamically
+                                        document.getElementById('modalTitle').innerText = `Claim ${documentType}`;
+                                        document.getElementById('modalBody').innerText = `Please visit your barangay hall to claim the ${documentType} certificate.`;
+                    
+                                        // Show modal
+                                        let claimCertificateModal = new bootstrap.Modal(document.getElementById('claimCertificateModal'));
+                                        claimCertificateModal.show();
+                                    });
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                    
+                    
+                    
+                    
+                    function formatDate(dateString) {
+                        const date = new Date(dateString);
+                        const options = { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric', 
+                            hour: 'numeric', 
+                            minute: 'numeric', 
+                            hour12: true 
+                        };
+                        return date.toLocaleDateString('en-US', options);
+                    }
+
+                    rejectedBtn.addEventListener('click', function() {
+                        fetch(`/residents/reject_requests/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                let content = '<h5>Rejected Document Requests</h5>';
+                                if (data.length > 0) {
+                                    content += `
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Document Type</th>
+                                                    <th>Date Requested</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>`;
+                                    data.forEach(request => {
+                                        const formattedDate = formatDate(request.date_requested);
+                                        content += `
+                                            <tr>
+                                                <td>${request.document_type}</td>
+                                                <td>${formattedDate}</td>
+                                                <td>${request.status}</td>
+                                            </tr>`;
+                                    });
+                                    content += '</tbody></table>';
+                                } else {
+                                    content += '<p>No Approved requests found.</p>';
+                                }
+                                formContainer.innerHTML = content;
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                    
+                    function formatDate(dateString) {
+                        const date = new Date(dateString);
+                        const options = { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric', 
+                            hour: 'numeric', 
+                            minute: 'numeric', 
+                            hour12: true 
+                        };
+                        return date.toLocaleDateString('en-US', options);
+                    }
+                });
+            </script>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+<h1>Resident Dashboard</h1>
+<p>Your account is not verified. Upload any valid ID here to be verified please. Thank you!</p>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Upload your valid ID:</label>
+    <input type="file" name="government_id" accept="image/*" required>
+    <button type="submit">Upload ID for Verification</button>
+</form>
+
+<form method="POST" action="{% url 'residents:logout' %}" style="margin-top: 10px;">
+    {% csrf_token %}
+    <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+        Logout
+    </button>
+</form>

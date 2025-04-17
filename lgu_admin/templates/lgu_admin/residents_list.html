@@ -11,261 +11,95 @@
         </div>
         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Table</a></li>
-                <li class="breadcrumb-item active"><a href="#">Resident List</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'lgu_admin:dashboard'%}">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'lgu_admin:residents_list' %}">Resident List</a></li>
             </ol>
         </div>
     </div>
 
-    <div class="row">
+ <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title">List of Residents</h4>
                     <div class="d-flex" style="gap: 10px;">
+                        
+                       
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addResidentModal">
                             + Add Resident
                         </button>
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadCSVModal">
                             Upload a CSV
                         </button>
-                        
                     </div>
-                </div>
+                </div> 
     
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="example" class="display" style="min-width: 845px">
+                        <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Full Name</th>
+                                    <th>Gender</th>
+                                    <th>Civil Status</th>
                                     <th>Address</th>
-                                    <th>Age</th>
+                                    <th>Barangay Zone</th>
                                     <th>Contact</th>
+                                    <th>Household</th>
                                     <th>Status</th>
-                                    <th>Account Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for resident in residents %}
-                                <tr class="clickable-row" data-href="{% url 'lgu_admin:resident_details' resident.id %}">
+                                <tr>
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{ resident.first_name }} {{ resident.last_name }}</td>
+                                    <td>
+                                        <a href="{% url 'lgu_admin:resident_details' resident.id %}" class="text-primary">
+                                            {{ resident.full_name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ resident.get_gender_display }}</td>
+                                    <td>{{ resident.get_civil_status_display }}</td>
                                     <td>{{ resident.address }}</td>
-                                    <td>{{ resident.age }}</td>
+                                    <td>{{ resident.barangay_zone|default:"N/A" }}</td>
                                     <td>{{ resident.contact_number }}</td>
                                     <td>
-                                        {% if resident.is_active %}
-                                            <span class="badge badge-success">Active</span>
-                                        {% elif resident.resident_profile.has_requested_account %}
-                                            <span class="badge badge-warning">Pending</span>
+                                        {% if resident.household %}
+                                            {{ resident.household.household_number }}
                                         {% else %}
-                                            <span class="badge badge-danger">Inactive</span>
+                                            <span class="badge badge-secondary">No Household</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if resident.user_account %}
-                                            <span class="badge badge-info">Account Created</span>
+                                        {% if resident.is_archived %}
+                                            <span class="badge badge-danger">Archived</span>
                                         {% else %}
-                                            <button type="button" class="btn btn-success btn-sm" 
-                                                data-toggle="modal" 
-                                                data-target="#addAccountModal"
-                                                data-resident-id="{{ resident.id }}"
-                                                data-resident-name="{{ resident.first_name }} {{ resident.last_name }}">
-                                                Add Account
-                                            </button>
+                                            <span class="badge badge-success">Active</span>
                                         {% endif %}
                                     </td>
+                                    <td>
+                                        <form action="{% url 'lgu_admin:archive_resident' resident.id %}" method="POST">
+                                            {% csrf_token %}
+                                            {% if resident.is_archived %}
+                                                <button type="submit" class="btn btn-success btn-sm">Unarchive</button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Archive</button>
+                                            {% endif %}
+                                        </form>
+                                        
+                                    </td>                                    
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="7" class="text-center">No residents found.</td>
+                                    <td colspan="10" class="text-center">No residents found.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        
-                    </div>
                 </div>
             </div>
-
-
-
-<!-- Add Resident Modal -->
-<div class="modal fade" id="addResidentModal">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title">Add New Resident</h5>
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-            </div>
-
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <form method="POST" action="{% url 'lgu_admin:add_resident' %}">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <!-- First Name -->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="first_name">First Name</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
-                            </div>
-                        </div>
-
-                        <!-- Middle Name -->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="middle_name">Middle Name</label>
-                                <input type="text" class="form-control" id="middle_name" name="middle_name">
-                            </div>
-                        </div>
-
-                        <!-- Last Name -->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
-                            </div>
-                        </div>
-
-                        <!-- Suffix -->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="suffix">Suffix</label>
-                                <input type="text" class="form-control" id="suffix" name="suffix">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Birth Date -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="birth_date">Birth Date</label>
-                                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
-                            </div>
-                        </div>
-
-                        <!-- Place of Birth -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="place_of_birth">Place of Birth</label>
-                                <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Gender -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="gender">Gender</label>
-                                <select class="form-control" id="gender" name="gender" required>
-                                    <option value="">Select Gender</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                    <option value="O">Other</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Nationality -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="nationality">Nationality</label>
-                                <input type="text" class="form-control" id="nationality" name="nationality" value="Filipino" required>
-                            </div>
-                        </div>
-
-                        <!-- Civil Status -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="civil_status">Civil Status</label>
-                                <select class="form-control" id="civil_status" name="civil_status" required>
-                                    <option value="">Select Civil Status</option>
-                                    <option value="single">Single</option>
-                                    <option value="married">Married</option>
-                                    <option value="widowed">Widowed</option>
-                                    <option value="divorced">Divorced</option>
-                                    <option value="separated">Separated</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text" class="form-control" id="address" name="address" required>
-                    </div>
-
-                    <div class="row">
-                        <!-- Barangay Zone -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="barangay_zone">Barangay Zone</label>
-                                <input type="text" class="form-control" id="barangay_zone" name="barangay_zone">
-                            </div>
-                        </div>
-
-                        <!-- Contact Number -->
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="contact_number">Contact Number</label>
-                                <input type="text" class="form-control" id="contact_number" name="contact_number" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Household -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="household">Household</label>
-                                <select class="form-control" id="household" name="household">
-                                    <option value="">Select Household</option>
-                                    {% for household in households %}
-                                        <option value="{{ household.id }}">{{ household.household_number }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Voter Status -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="voter_status">Voter Status</label>
-                                <select class="form-control" id="voter_status" name="voter_status">
-                                    <option value="False">Not Registered</option>
-                                    <option value="True">Registered</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- ID Number -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="id_number">ID Number</label>
-                                <input type="text" class="form-control" id="id_number" name="id_number">
-                            </div>
-                        </div>
-                    </div>
-
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save Resident</button>
-            </div>
-            </form>
         </div>
-    </div>
-</div>
 
 <!-- Upload CSV Modal -->
 <div class="modal fade" id="uploadCSVModal" tabindex="-1" role="dialog" aria-labelledby="uploadCSVModalLabel" aria-hidden="true">
@@ -299,6 +133,239 @@
     </div>
 </div>
 
+<!-- Add Resident Modal -->
+<div class="modal fade" id="addResidentModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Resident</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form method="POST" action="{% url 'lgu_admin:add_resident' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                
+                    <div class="row">
+                        <!-- First Name -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="first_name">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                        </div>
+                
+                        <!-- Middle Name -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="middle_name">Middle Name</label>
+                                <input type="text" class="form-control" id="middle_name" name="middle_name">
+                            </div>
+                        </div>
+                
+                        <!-- Last Name -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                        </div>
+                
+                        <!-- Suffix -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="suffix">Suffix</label>
+                                <input type="text" class="form-control" id="suffix" name="suffix">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Birth Date -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="birth_date">Birth Date</label>
+                                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                            </div>
+                        </div>
+                
+                        <!-- Place of Birth -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="place_of_birth">Place of Birth</label>
+                                <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" required>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Gender -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select class="form-control" id="gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="O">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                
+                        <!-- Nationality -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nationality">Nationality</label>
+                                <input type="text" class="form-control" id="nationality" name="nationality" value="Filipino" required>
+                            </div>
+                        </div>
+                
+                        <!-- Civil Status -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="civil_status">Civil Status</label>
+                                <select class="form-control" id="civil_status" name="civil_status" required>
+                                    <option value="">Select Civil Status</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="widowed">Widowed</option>
+                                    <option value="divorced">Divorced</option>
+                                    <option value="separated">Separated</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Head of Family, PWD, Senior Citizen -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="is_head_of_family">Head of Family?</label>
+                            <input type="checkbox" id="is_head_of_family" name="is_head_of_family">
+                        </div>
+                
+                        <div class="col-md-4">
+                            <label for="is_pwd">PWD?</label>
+                            <input type="checkbox" id="is_pwd" name="is_pwd">
+                        </div>
+                
+                        <div class="col-md-4">
+                            <label for="is_senior_citizen">Senior Citizen?</label>
+                            <input type="checkbox" id="is_senior_citizen" name="is_senior_citizen">
+                        </div>
+                    </div>
+                
+                    <!-- Address -->
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Household Selection -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Household Number</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    name="household" 
+                                    id="household" 
+                                    placeholder="Enter Household Number"
+                                    list="household_list" 
+                                    required
+                                >
+                                
+                                <datalist id="household_list">
+                                    {% for household in households %}
+                                        <option value="{{ household.household_number }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="contact_number">Contact Number</label>
+                                <input type="text" class="form-control" id="contact_number" name="contact_number" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="barangay_zone">Barangay Zone</label>
+                        <select class="form-control" id="barangay_zone" name="barangay_zone" required>
+                            <option value="">Select Zone</option>
+                            <option value="Zone 1">Zone 1</option>
+                            <option value="Zone 2">Zone 2</option>
+                            <option value="Zone 3">Zone 3</option>
+                            <option value="Zone 4">Zone 4</option>
+                            <option value="Zone 5">Zone 5</option>
+                            <option value="Zone 6">Zone 6</option>
+                            <option value="Zone 7">Zone 7</option>
+                        </select>
+                    </div>
+                    
+                        <!-- Household Address (for new households) -->
+                        
+                            <div class="form-group">
+                                <label for="household_address">Household Address</label>
+                                <input type="text" class="form-control" id="household_address" name="household_address" placeholder="Enter Address for New Household">
+                            </div>
+                        
+                 
+                    <!-- Contact Number -->
+
+
+                
+                    <div class="row">
+                        <!-- Voter Status -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="voter_status">Voter Status</label>
+                                <select class="form-control" id="voter_status" name="voter_status">
+                                    <option value="False" selected>Not Registered</option>
+                                    <option value="True">Registered</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="occupation">Occupation</label>
+                            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Enter Occupation">
+                        </div>
+                        </div>
+                        
+                
+                        <!-- ID Number -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="id_number">ID Number</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- File Uploads -->
+                    <div class="form-group">
+                        <label for="profile_picture">Picture</label>
+                        <input type="file" class="form-control" id="profile_picture" name="profile_picture">
+                    </div>
+                    <div class="form-group">
+                        <label for="government_id">Government ID</label>
+                        <input type="file" class="form-control" id="government_id" name="government_id">
+                    </div>
+                
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Resident</button>
+                    </div>
+                </form>
+                
+        </div>
+    </div>
+</div>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".clickable-row").forEach(row => {
@@ -319,7 +386,86 @@
         modal.find('#residentId').val(residentId);
     });
 </script>
+<script>
+    function printReport() {
+        // Open new window
+        const printWindow = window.open('', '', 'height=600,width=800');
 
+        // Get the HTML content of the table
+        const tableContent = document.getElementById('example').outerHTML;
+
+        // Remove the first and last columns from the table
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = tableContent;
+
+        const rows = tempElement.querySelectorAll('tr');
+        rows.forEach(row => {
+            row.deleteCell(0); // Remove first column (#)
+            row.deleteCell(row.cells.length - 1); // Remove last column (Action)
+        });
+
+        // Add custom styling for the print page
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Resident Report</title>
+                    <style>
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 8px;
+                            text-align: center;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                        }
+                        .header img {
+                            width: 80px;
+                            height: 80px;
+                        }
+                        .header-title {
+                            font-size: 20px;
+                            font-weight: bold;
+                            margin-top: -60px;
+                        }
+                        .logo-left {
+                            float: left;
+                        }
+                        .logo-right {
+                            float: right;
+                        }
+                        @media print {
+                            .no-print {
+                                display: none;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <img src="/static/logos/logo1.png" alt="Left Logo" class="logo-left">
+                        <img src="/static/logos/logo2.png" alt="Right Logo" class="logo-right">
+                        <p class="header-title">Resident Report</p>
+                    </div>
+                    ${tempElement.innerHTML}
+                </body>
+            </html>
+        `);
+
+        // Close the document and trigger print
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }
+</script>
 
 
 {% endblock %}
