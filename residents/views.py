@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LogoutView
-from django.contrib import messages
-from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 from core.mixins import ResidentRequiredMixin
+from django.views.generic import DetailView
+from django.utils.timezone import localtime
+from django.http import JsonResponse
+from django.urls import reverse_lazy
+from django.contrib import messages
+from core.models import CustomUser
+from django.views import View
+import pytz
 from.forms import (JobseekerCertificationForm,
                    CertificateOfGuardianshipForm,
                    CertificateOfGoodMoralCharacterForm,
@@ -32,11 +37,6 @@ from .models import (
     CertificateOfUnemployment,
     CertificateOfAppearance
 )
-
-from django.utils.timezone import localtime
-from django.http import JsonResponse
-
-import pytz
 
 #resident dashboard
 class ResidentDashboardView(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):
@@ -66,8 +66,7 @@ class ResidentUploadIDView(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
-
-class ResidentsDocumentRequest(LoginRequiredMixin, View):
+class ResidentsDocumentRequest(LoginRequiredMixin, ResidentRequiredMixin, View):
     template_name = "residents/document_request.html"
 
     def get(self, request, *args, **kwargs):
@@ -82,6 +81,18 @@ class ResidentsDocumentRequest(LoginRequiredMixin, View):
         one_and_same_person_form = OneAndSamePersonCertificationForm()
         unemployment_form = CertificateOfUnemploymentForm()
         appearance_form = CertificateOfAppearanceForm()
+        
+        def get (self, request):
+            pending_requests = []
+            for doc_type, model in self.models.items():
+                requests = model.objects.filter(resident=request.user,status="Pending").values('date_requested', 'status').order_by('-date_requested')
+            
+            for req in requests:
+                req['document_type'] = doc_type
+                pending_requests.append(req)
+            return JsonResponse(pending_requests, safe=False)
+                
+
 
         return render(request, self.template_name, {
             'indigency_form': indigency_form,
@@ -134,7 +145,7 @@ class ResidentsDocumentRequest(LoginRequiredMixin, View):
         return self.get(request)
 
 
-class PendingRequestsView(View):
+class PendingRequestsView(LoginRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -153,7 +164,11 @@ class PendingRequestsView(View):
         pending_requests = []
 
         for doc_type, model in self.models.items():
-            requests = model.objects.filter(status="Pending").values('date_requested', 'status').order_by('-date_requested')
+            requests = model.objects.filter(
+                resident=request.user,
+                status="Pending"
+            ).values('date_requested', 'status').order_by('-date_requested')
+
             for req in requests:
                 req['document_type'] = doc_type
                 pending_requests.append(req)
@@ -161,8 +176,7 @@ class PendingRequestsView(View):
         return JsonResponse(pending_requests, safe=False)
 
 
-
-class ApproveRequestsView(View):
+class ApproveRequestsView(LoginRequiredMixin, ResidentRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -181,14 +195,18 @@ class ApproveRequestsView(View):
         approve_requests = []
 
         for doc_type, model in self.models.items():
-            requests = model.objects.filter(status="Approved").values('date_requested', 'status').order_by('-date_requested')
+            requests = model.objects.filter(
+                resident=request.user,
+                status="Approved"
+            ).values('date_requested', 'status').order_by('-date_requested')
+
             for req in requests:
                 req['document_type'] = doc_type
                 approve_requests.append(req)
 
         return JsonResponse(approve_requests, safe=False)
-
-class RejectedRequestsView(View):
+    
+class RejectedRequestsView(LoginRequiredMixin, ResidentRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -207,18 +225,28 @@ class RejectedRequestsView(View):
         reject_requests = []
 
         for doc_type, model in self.models.items():
-            requests = model.objects.filter(status="Rejected").values('date_requested', 'status').order_by('-date_requested')
+            requests = model.objects.filter(
+                resident=request.user,
+                status="Rejected"
+            ).values('date_requested', 'status').order_by('-date_requested')
+
             for req in requests:
                 req['document_type'] = doc_type
                 reject_requests.append(req)
 
         return JsonResponse(reject_requests, safe=False)
 
-
-
-
-
-
+class ResidentsProfileView(LoginRequiredMixin, ResidentRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'residents/profile.html'
+    context_object_name = 'user'
+    
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class ViewPrograms(LoginRequiredMixin, ResidentRequiredMixin, TemplateView):

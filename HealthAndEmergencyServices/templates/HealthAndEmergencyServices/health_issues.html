@@ -1,0 +1,160 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Health Issues</h4>
+                <span class="ml-1">View your reported health conditions</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item active">Health Issues</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Health & Emergency Services</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'health_emergency:emergency_contacts' %}">Emergency Contacts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'health_emergency:health_issues' %}">Health Issues</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'health_emergency:medical_requests' %}">Medical Requests</a>
+                        </li>
+                       
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#reportIssueModal" role="button" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-primary">Report Health Issue</button>
+        </a>
+    </li>
+    
+
+    <!-- Report Issue Modal -->
+    <div class="modal fade" id="reportIssueModal" tabindex="-1" role="dialog" aria-labelledby="reportIssueModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="post" id="reportIssueForm" action="{% url 'health_emergency:report_health_issue' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportIssueModalLabel">Report New Health Issue</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="{{ form.health_condition.id_for_label }}">Health Condition</label>
+                            <input type="text" name="health_condition" class="form-control" value="{{ form.health_condition.value }}" placeholder="e.g. High Fever">
+                            {{ form.health_condition.errors }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.alert_level.id_for_label }}">Alert Level</label>
+                            <select name="alert_level" class="form-control">
+                                <option value="Low" {% if form.alert_level.value == "Low" %}selected{% endif %}>Low</option>
+                                <option value="Medium" {% if form.alert_level.value == "Medium" %}selected{% endif %}>Medium</option>
+                                <option value="High" {% if form.alert_level.value == "High" %}selected{% endif %}>High</option>
+                            </select>
+                            {{ form.alert_level.errors }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.notes.id_for_label }}">Additional Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Describe symptoms, duration, etc.">{{ form.notes.value }}</textarea>
+                            {{ form.notes.errors }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">
+                            + Submit Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Issues Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">My Health Reports</h4>
+                </div>
+                <div class="card-body">
+                    {% if issues %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Condition</th>
+                                        <th>Status</th>
+                                        <th>Alert Level</th>
+                                        <th>Reported On</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for issue in issues %}
+                                    <tr>
+                                        <td>{{ issue.health_condition }}</td>
+                                        <td>
+                                            <span class="badge 
+                                                {% if issue.status == 'Resolved' %}badge-success
+                                                {% elif issue.status == 'Reported' %}badge-warning
+                                                {% else %}badge-secondary
+                                                {% endif %}">
+                                                {{ issue.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge 
+                                                {% if issue.alert_level == 'High' %}badge-danger
+                                                {% elif issue.alert_level == 'Medium' %}badge-warning
+                                                {% else %}badge-secondary
+                                                {% endif %}">
+                                                {{ issue.alert_level }}
+                                            </span>
+                                        </td>
+                                        <td>{{ issue.reported_date|date:"M d, Y - H:i" }}</td>
+                                        <td>{{ issue.notes|default:"-" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <img src="{% static 'images/no-data.png' %}" alt="No Issues" style="width: 100px; opacity: 0.6;" class="mb-3">
+                            <p class="text-muted">You have not reported any health issues yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -12,6 +12,7 @@ from .views import (ResidentDashboardView,
                     ResidentDocumentSubmitted,
                     ResidentDocumentApplyPrograms,
                     InventoryBorrow,
+                    ResidentsProfileView,
 )
 
 
@@ -19,6 +20,7 @@ app_name = 'residents'
 
 urlpatterns = [
     path('dashboard/', ResidentDashboardView.as_view(), name='dashboard'),
+    path('profile/', ResidentsProfileView.as_view(), name='profile'),
 
     #upload for verrifications
     path('upload-id/', ResidentUploadIDView.as_view(), name='resident_upload_id'),

@@ -1,21 +1,22 @@
-from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
-from django.views.generic import TemplateView, View
-from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
-from django.contrib import messages
-from residents.models import Resident, Household
-from lgu_admin.models import BarangayReport
 from .models import Service, Project, BarangayOfficial, CustomUser
 from .forms import BarangayReportForm, CustomUserRegistrationForm
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.hashers import make_password
+from django.views.generic import TemplateView, View
+from residents.models import Resident, Household
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect, render
+from lgu_admin.models import BarangayReport
+from django.shortcuts import redirect
 from django.http import JsonResponse
-import json
+from django.contrib import messages
+from django.db import transaction
 from django.conf import settings
+from django.urls import reverse
+from django.db.models import Q
 import openai
+import json
 
 User = get_user_model()
 
@@ -77,26 +78,39 @@ class ResidentRegistrationView(View):
         form = CustomUserRegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
-            middle_name = form.cleaned_data['middle_name']
+            middle_name = form.cleaned_data['middle_name'] or ''
             last_name = form.cleaned_data['last_name']
-            suffix = form.cleaned_data['suffix']
+            suffix = form.cleaned_data['suffix'] or ''
 
-            resident_exists = Resident.objects.filter(
-                first_name=first_name,
-                middle_name=middle_name,
-                last_name=last_name,
-                suffix=suffix
-            ).exists()
-
-            if resident_exists:
-                user = form.save(commit=False)
-                user.user_type = 'resident'
-                user.save()
+            query = Q(
+                first_name__iexact=first_name,
+                last_name__iexact=last_name
+            )
+            
+            if middle_name:
+                query &= Q(middle_name__iexact=middle_name)
+            
+            if suffix:
+                query &= Q(suffix__iexact=suffix)
+                
+            try:
+                resident = Resident.objects.get(query)
+                
+                with transaction.atomic():
+                    user = form.save(commit=False)
+                    user.user_type = 'resident'
+                    
+                    user.save()
+                    
                 login(request, user)
-                return redirect('core:resident_dashboard')
-            else:
+                messages.success(request, "Registration successful. Welcome!")
+                return redirect('residents:resident_dashboard')
+                
+            except Resident.DoesNotExist:
                 messages.error(request, "Sorry, you are not registered on the list. Please inquire in our respective barangay.")
-
+            except Resident.MultipleObjectsReturned:
+                messages.error(request, "Multiple resident records found. Please contact the barangay office for assistance.")
+        
         return render(request, self.template_name, {'form': form})
 
 def ai_response(request):
@@ -123,7 +137,6 @@ def ai_response(request):
                 ]
             )
 
-            # AI response
             ai_reply = response.choices[0].message.content
 
         except openai.OpenAIError as e:

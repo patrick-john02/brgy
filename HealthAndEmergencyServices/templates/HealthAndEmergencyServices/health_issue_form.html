@@ -1,0 +1,81 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Report Health Issue</h4>
+                <span class="ml-1">Provide the details of your health condition</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'health_emergency:health_issues' %}">Health Issues</a></li>
+                <li class="breadcrumb-item active">Report Health Issue</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Report a New Health Issue</h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" action="{% url 'health_emergency:report_health_issue' %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.health_condition.id_for_label }}">Health Condition</label>
+                            {{ form.health_condition|as_widget(attrs={'class': 'form-control', 'placeholder': 'e.g. High Fever'}) }}
+                            {% if form.health_condition.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.health_condition.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.alert_level.id_for_label }}">Alert Level</label>
+                            {{ form.alert_level|as_widget(attrs={'class': 'form-control'}) }}
+                            {% if form.alert_level.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.alert_level.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.notes.id_for_label }}">Additional Notes</label>
+                            {{ form.notes|as_widget(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe symptoms, duration, etc.'}) }}
+                            {% if form.notes.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.notes.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-paper-plane mr-2"></i>Submit Report
+                            </button>
+                            <a href="{% url 'health_emergency:health_issues' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

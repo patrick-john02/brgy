@@ -1,0 +1,88 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Request Medical Assistance</h4>
+                <span class="ml-1">Submit a request for medical help</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'health_emergency:medical_requests' %}">Medical Requests</a></li>
+                <li class="breadcrumb-item active">Request Assistance</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Health & Emergency Services</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'health_emergency:emergency_contacts' %}">Emergency Contacts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'health_emergency:health_issues' %}">Health Issues</a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'health_emergency:medical_requests' %}">Medical Requests</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical Request Form -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Create New Medical Request</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'health_emergency:request_medical_assistance' %}">
+                        {% csrf_token %}
+                    
+                        <div class="form-group">
+                            <label for="{{ form.request_type.id_for_label }}">Request Type</label>
+                            {{ form.request_type }}
+                            {{ form.request_type.errors }}
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="{{ form.location.id_for_label }}">Location</label>
+                            {{ form.location }}
+                            {{ form.location.errors }}
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="{{ form.request_description.id_for_label }}">Description</label>
+                            {{ form.request_description }}
+                            {{ form.request_description.errors }}
+                        </div>
+                    
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane mr-2"></i> Submit Request
+                            </button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

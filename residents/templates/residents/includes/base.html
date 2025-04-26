@@ -1,7 +1,6 @@
 {% load static%}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,13 +14,10 @@
     <link href="{% static 'focus/vendor/jqvmap/css/jqvmap.min.css'%}" rel="stylesheet">
     <link href="{% static 'focus/vendor/datatables/css/jquery.dataTables.min.css'%}" rel="stylesheet">
     <link href="{% static 'focus/css/style.css'%}" rel="stylesheet">
-    <link href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css'%}" rel="stylesheet">
+    <link href="{% static 'focus/vendor/sweetalert2/dist/sweetalert2.min.css'%}" rel="stylesheet">
     <link href="{% static 'focus/vendor/jquery-steps/css/jquery.steps.css'%}" rel="stylesheet">
-
 </head>
-
 <body>
-
     <div id="preloader">
         <div class="sk-three-bounce">
             <div class="sk-child sk-bounce1"></div>
@@ -29,75 +25,44 @@
             <div class="sk-child sk-bounce3"></div>
         </div>
     </div>
-
-
     <div id="main-wrapper">
         {% include 'residents/includes/navbar.html' %}
         {% include 'residents/includes/sidebar.html' %}
         <div class="content-body">
             {%block content%}
-
-
             {%endblock%}
         </div> 
-     <!--**********************************
-        Main wrapper end
-    ***********************************-->
-
-    <!--**********************************
-        Scripts
-    ***********************************-->
     <!-- Required vendors -->
     <script src="{% static 'focus/vendor/global/global.min.js'%}"></script>
     <script src="{% static 'focus/js/quixnav-init.js'%}"></script>
     <script src="{% static 'focus/js/custom.min.js'%}"></script>
-
-
     <!-- Vectormap -->
     <script src="{% static 'focus/vendor/raphael/raphael.min.js'%}"></script>
     <script src="{% static 'focus/vendor/morris/morris.min.js'%}"></script>
-
-
     <script src="{% static 'focus/vendor/circle-progress/circle-progress.min.js'%}"></script>
     <script src="{% static 'focus/vendor/chart.js/Chart.bundle.min.js'%}"></script>
-
     <script src="{% static 'focus/vendor/gaugeJS/dist/gauge.min.js'%}"></script>
-
     <!--  flot-chart js -->
     <script src="{% static 'focus/vendor/flot/jquery.flot.js'%}"></script>
     <script src="{% static 'focus/vendor/flot/jquery.flot.resize.js'%}"></script>
-
-
-
-   
-
     <!-- Owl Carousel -->
     <script src="{% static 'focus/vendor/owl-carousel/js/owl.carousel.min.js'%}"></script>
-
     <!-- Counter Up -->
     <script src="{% static 'focus/vendor/jqvmap/js/jquery.vmap.min.js'%}"></script>
     <script src="{% static 'focus/vendor/jqvmap/js/jquery.vmap.usa.js'%}"></script>
     <script src="{% static 'focus/vendor/jquery.counterup/jquery.counterup.min.js'%}"></script>
-
-
     <script src="{% static 'focus/js/dashboard/dashboard-1.js'%}"></script>
-
     <script src="{% static 'focus/vendor/jquery-steps/build/jquery.steps.min.js'%}"></script>
     <script src="{% static 'focus/vendor/jquery-validation/jquery.validate.min.js'%}"></script>
-
     <!-- Form validate init -->
     <script src="{% static 'focus/js/plugins-init/jquery.validate-init.js'%}"></script>
     <!-- Form step init -->
     <script src="{% static 'focus/js/plugins-init/jquery-steps-init.js'%}"></script>
-
     <!-- Datatable -->
     <script src="{% static 'focus/vendor/datatables/js/jquery.dataTables.min.js'%}"></script>
     <script src="{% static 'focus/js/plugins-init/datatables.init.js'%}"></script>
-
     <!-- Sweet Alert -->
     <script src="{% static 'focus/vendor/sweetalert2/dist/sweetalert2.min.js'%}"></script>
     <script src="{% static 'focus/js/plugins-init/sweetalert.init.js'%}"></script>
-
 </body>
-
 </html>

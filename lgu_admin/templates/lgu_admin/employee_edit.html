@@ -33,7 +33,7 @@
                         <!-- Profile Picture Display -->
                         <div class="text-center mb-4">
                             <label class="fw-semibold mb-2">Current Profile Picture</label><br>
-                            {% if employee.profile_picture %}
+                            {% if user.profile_picture %}
                                 <img src="{{ employee.profile_picture.url }}" class="rounded-circle shadow" width="130" height="130" alt="Profile Picture">
                             {% else %}
                                 <img src="{% static 'profile_pictures/default.jpg' %}" class="rounded-circle shadow" width="130" height="130" alt="Default Picture">

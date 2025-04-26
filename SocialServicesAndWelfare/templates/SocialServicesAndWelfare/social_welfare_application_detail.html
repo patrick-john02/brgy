@@ -1,0 +1,403 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Breadcrumb and Title -->
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Application Details</h4>
+                <span class="ml-1">View your application information</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'social_service:social_welfare_applications' %}">Applications</a></li>
+                <li class="breadcrumb-item active"><a href="javascript:void(0)">Details</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Application Info Card -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="card-title mb-0">Application #{{ application.reference_number|default:"New" }}</h4>
+                        <small class="text-muted">Application Information</small>
+                    </div>
+                    <div>
+                        {% if application.status == 'PENDING' %}
+                            <span class="badge badge-warning light px-3 py-2">
+                                <i class="fa fa-clock-o mr-1"></i> Pending
+                            </span>
+                        {% elif application.status == 'APPROVED' %}
+                            <span class="badge badge-success light px-3 py-2">
+                                <i class="fa fa-check-circle mr-1"></i> Approved
+                            </span>
+                        {% elif application.status == 'REJECTED' %}
+                            <span class="badge badge-danger light px-3 py-2">
+                                <i class="fa fa-times-circle mr-1"></i> Rejected
+                            </span>
+                        {% else %}
+                            <span class="badge badge-info light px-3 py-2">
+                                <i class="fa fa-info-circle mr-1"></i> {{ application.status|title }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <div class="row">
+                            <div class="col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="text-label">Service Type</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-folder-open"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ application.get_service_type_display }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="text-label">Reference Number</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ application.reference_number|default:'Not assigned yet' }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="text-label">Date Applied</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ application.date_applied|date:'F d, Y' }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mb-3">
+                                <div class="form-group">
+                                    <label class="text-label">Last Updated</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ application.updated_at|date:'F d, Y g:i A'|default:'-' }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="text-label">Purpose</label>
+                            <div class="card bg-light border-0 shadow-sm">
+                                <div class="card-body py-3 px-4">
+                                    {{ application.purpose|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if application.notes %}
+                        <div class="form-group">
+                            <label class="text-label">Official Notes</label>
+                            <div class="alert alert-info d-flex">
+                                <i class="fa fa-info-circle fa-2x mr-3 my-auto"></i>
+                                <div>{{ application.notes|linebreaks }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if application.rejection_reason and application.status == 'REJECTED' %}
+                        <div class="form-group">
+                            <label class="text-label">Rejection Reason</label>
+                            <div class="alert alert-danger d-flex">
+                                <i class="fa fa-exclamation-circle fa-2x mr-3 my-auto"></i>
+                                <div>{{ application.rejection_reason|linebreaks }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex align-items-center">
+                        <div class="text-muted mr-auto">
+                            <small>
+                                <i class="fa fa-user mr-1"></i> Applied by: {{ application.resident.full_name }}
+                            </small>
+                        </div>
+                        {% if application.status == 'APPROVED' %}
+                        <div class="text-success">
+                            <i class="fa fa-certificate mr-1"></i> Certificate Available
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Supporting Documents Card -->
+            <div class="card">
+                <div class="card-header border-0">
+                    <h4 class="card-title">Supporting Documents</h4>
+                </div>
+                <div class="card-body">
+                    {% if application.supporting_documents %}
+                        <div class="document-card">
+                            <div class="document-card-body text-center">
+                                <div class="document-icon rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fa fa-file-pdf-o text-danger fa-3x"></i>
+                                </div>
+                                <h5>Attached Document</h5>
+                                <p class="text-muted">{{ application.supporting_documents.name|truncatechars:20 }}</p>
+                                <div class="mt-4">
+                                    <a href="{{ application.supporting_documents.url }}" target="_blank" class="btn btn-primary btn-block mb-2">
+                                        <i class="fa fa-eye mr-2"></i>View Document
+                                    </a>
+                                    <a href="{{ application.supporting_documents.url }}" download class="btn btn-outline-primary btn-block">
+                                        <i class="fa fa-download mr-2"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fa fa-file-o text-muted fa-3x"></i>
+                            </div>
+                            <h5 class="text-muted">No Documents</h5>
+                            <p class="mb-0">No supporting documents were attached to this application</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Application Timeline -->
+            <div class="card">
+                <div class="card-header border-0">
+                    <h4 class="card-title">Application Timeline</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="widget-timeline py-3">
+                        <ul class="timeline">
+                            <li>
+                                <div class="timeline-badge primary"></div>
+                                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                                    <span class="badge badge-primary light">{{ application.date_applied|date:"F d, Y" }}</span>
+                                    <h6 class="mb-0 mt-2">Application Submitted</h6>
+                                    <p class="mb-0 text-muted fs-14">Initial submission by applicant</p>
+                                </a>
+                            </li>
+                            
+                            {% if application.date_processed %}
+                            <li>
+                                <div class="timeline-badge info"></div>
+                                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                                    <span class="badge badge-info light">{{ application.date_processed|date:"F d, Y" }}</span>
+                                    <h6 class="mb-0 mt-2">Application Processed</h6>
+                                    <p class="mb-0 text-muted fs-14">Reviewed by {{ application.processed_by|default:"staff" }}</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% if application.status == 'APPROVED' %}
+                            <li>
+                                <div class="timeline-badge success"></div>
+                                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                                    <span class="badge badge-success light">{{ application.date_approved|date:"F d, Y"|default:"-" }}</span>
+                                    <h6 class="mb-0 mt-2">Application Approved</h6>
+                                    <p class="mb-0 text-muted fs-14">Ready for certificate download</p>
+                                </a>
+                            </li>
+                            {% elif application.status == 'REJECTED' %}
+                            <li>
+                                <div class="timeline-badge danger"></div>
+                                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                                    <span class="badge badge-danger light">{{ application.date_rejected|date:"F d, Y"|default:"-" }}</span>
+                                    <h6 class="mb-0 mt-2">Application Rejected</h6>
+                                    <p class="mb-0 text-muted fs-14">See rejection details</p>
+                                </a>
+                            </li>
+                            {% elif application.status == 'PENDING' %}
+                            <li>
+                                <div class="timeline-badge warning"></div>
+                                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                                    <span class="badge badge-warning light">Pending</span>
+                                    <h6 class="mb-0 mt-2">Under Review</h6>
+                                    <p class="mb-0 text-muted fs-14">Awaiting final decision</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <small class="text-muted">
+                        <i class="fa fa-info-circle mr-1"></i> Timeline shows application progress
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <a href="{% url 'social_service:social_welfare_applications' %}" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left mr-2"></i>Back to Applications
+                        </a>
+                        
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newApplicationModal">
+                            <i class="fa fa-plus-circle mr-2"></i>New Application
+                        </button>
+                    </div>
+                    
+                    <div>
+                        {% if application.status == 'PENDING' %}
+                        <a href="{% url 'social_service:application_edit' application.id %}" class="btn btn-primary">
+                            <i class="fa fa-pencil mr-2"></i>Edit Application
+                        </a>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">
+                            <i class="fa fa-times-circle mr-2"></i>Cancel Application
+                        </button>
+                        {% endif %}
+                        
+                        {% if application.status == 'APPROVED' %}
+                        <a href="{% url 'social_service:certificate_download' application.id %}" class="btn btn-info">
+                            <i class="fa fa-download mr-2"></i>Download Certificate
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Application Modal -->
+{% if application.status == 'PENDING' %}
+<div class="modal fade" id="cancelModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Application</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form action="{% url 'social_service:application_delete' application.id %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fa fa-exclamation-triangle text-warning fa-3x"></i>
+                        <h4 class="mt-3">Are you sure?</h4>
+                        <p class="text-muted">This action cannot be undone and your application will be permanently removed.</p>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa fa-comment mr-2"></i>Reason for cancellation (optional)</label>
+                        <textarea name="cancel_reason" class="form-control" rows="3" placeholder="Please specify why you're cancelling this application..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Confirm Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Create New Application Modal -->
+<div class="modal fade" id="newApplicationModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-file-text-o mr-2"></i>
+                    New Social Welfare Application
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form action="{% url 'social_service:social_welfare_apply' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="text-label">Service Type <span class="text-danger">*</span></label>
+                                <select name="service_type" class="form-control" required>
+                                    <option value="" selected disabled>-- Select Service Type --</option>
+                                    <option value="FINANCIAL_ASSISTANCE">Financial Assistance</option>
+                                    <option value="MEDICAL_ASSISTANCE">Medical Assistance</option>
+                                    <option value="BURIAL_ASSISTANCE">Burial Assistance</option>
+                                    <option value="EDUCATIONAL_ASSISTANCE">Educational Assistance</option>
+                                    <option value="FOOD_ASSISTANCE">Food Assistance</option>
+                                    <option value="OTHER">Other Service</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="text-label">Purpose <span class="text-danger">*</span></label>
+                                <textarea name="purpose" class="form-control" rows="5" required placeholder="Please describe the purpose of your application..."></textarea>
+                                <small class="text-muted">Please provide detailed information about why you're applying for this service.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="text-label">Supporting Documents</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="supporting_documents" id="supporting_documents">
+                                    <label class="custom-file-label" for="supporting_documents">Choose file</label>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="fa fa-info-circle mr-1"></i>
+                                    Accepted formats: PDF, JPEG, PNG (Max: 5MB)
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="declaration" id="declaration" required>
+                                    <label class="custom-control-label" for="declaration">
+                                        I declare that all information provided is true and correct. I understand that providing false information may result in the rejection of my application.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // File input display filename
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    });
+</script>
+{% endblock %}

@@ -13,28 +13,56 @@
                         class="icon icon-form"></i><span class="nav-text">Requests</span></a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'residents:residendocument'%}">Documents</a></li>
-                    <li><a href="{% url 'residents:barangay_submitted'%}">Submitted</a></li> 
+                    {% comment %} <li><a href="{% url 'residents:barangay_submitted'%}">Submitted</a></li>  {% endcomment %}
                    
                 </ul>
             </li>
 
-            <li class="nav-label">Programs</li>
+            {% comment %} <li class="nav-label">Programs</li>
             <li><a href="{% url 'residents:apply_programs'%}" aria-expanded="false"><i class="icon icon-single-04"></i><span
-                class="nav-text">Apply Programs</span></a></li>
+            class="nav-text">Apply Programs</span></a></li> {% endcomment %}
 
+            <li class="nav-label">Services</li>
+
+            <li>
+                <a href="{% url 'social_service:social_welfare_applications' %}" aria-expanded="false">
+                    <i class="icon icon-heart-2"></i>
+                    <span class="nav-text">Social Services and Welfare</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'health_emergency:emergency_contacts' %}" aria-expanded="false">
+                    <i class="icon icon-single-copy-06"></i>
+                    <span class="nav-text">Health Care Services</span>
+                </a>
+            </li>
             
-           
-
-
+            <li>
+                <a href="{% url 'community_event:event_list' %}" aria-expanded="false">
+                    <i class="icon icon-single-copy-06"></i>
+                    <span class="nav-text">Events</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="{% url 'education_training:skills_program_list' %}" aria-expanded="false">
+                    <i class="icon icon-layout-25"></i>
+                    <span class="nav-text">Education & Training</span>
+                </a>
+            </li>
+            
             <li class="nav-label">Inventory</li>
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
-                        class="icon icon-layout-25"></i><span class="nav-text">List</span></a>
+            
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-form"></i>
+                    <span class="nav-text">List</span>
+                </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'residents:inventory_borrow'%}">Borrow</a></li>
-                   
-                   
+                    <li><a href="{% url 'residents:inventory_borrow' %}">Borrow</a></li>
                 </ul>
             </li>
+            
 
             {% comment %} <li class="nav-label">Documents</li>
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i

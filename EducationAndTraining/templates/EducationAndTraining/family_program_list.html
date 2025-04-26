@@ -1,0 +1,49 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Family Welfare Programs</h4>
+                <span class="ml-1">Discover programs that support family well-being</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item active">Family Programs</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if programs %}
+            {% for program in programs %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <a href="{% url 'education_training:family_program_detail' program.pk %}" class="card h-100 text-decoration-none text-dark shadow-sm hover-shadow border-0 rounded">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ program.title }}</h5>
+                            <p class="card-text text-truncate" style="max-height: 4.5em;">{{ program.description|linebreaksbr }}</p>
+                            <div class="mt-auto pt-3 border-top">
+                                <small class="text-muted d-block">
+                                    <strong>Date:</strong> {{ program.date }} &nbsp;|&nbsp;
+                                    <strong>Location:</strong> {{ program.location }}
+                                </small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    No family programs available currently.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

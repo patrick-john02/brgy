@@ -1,0 +1,175 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Social Welfare Applications</h4>
+                <span class="ml-1">Manage your applications here</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item active">Applications</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">My Applications</h4>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addApplicationModal">
+                        + New Application
+                    </button>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                    <div class="table-responsive">
+                        <table id="applications-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Reference No.</th>
+                                    <th>Service Type</th>
+                                    <th>Date Applied</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ app.get_service_type_display }}</td>
+                                   
+                                    <td>{{ app.date_applied|date:"F d, Y" }}</td>
+                                    <td>
+                                        {% if app.status == 'PENDING' %}
+                                        <span class="badge light badge-warning">{{ app.status }}</span>
+                                        {% elif app.status == 'APPROVED' %}
+                                        <span class="badge light badge-success">{{ app.status }}</span>
+                                        {% elif app.status == 'REJECTED' %}
+                                        <span class="badge light badge-danger">{{ app.status }}</span>
+                                        {% else %}
+                                        <span class="badge light badge-info">{{ app.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a href="{% url 'social_service:application_detail' app.id %}" class="btn btn-info shadow btn-xs sharp mr-1"><i class="fa fa-eye"></i></a>
+                                            {% if app.status == 'PENDING' %}
+                                            <a href="{% url 'social_service:application_edit' app.id %}" class="btn btn-sm btn-primary mr-1"><i class="fas fa-edit"></i></a>
+                                            <a href="#" data-app-id="{{ app.id }}" class="btn btn-sm btn-danger delete-app"><i class="fas fa-trash-alt"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <img src="{% static 'images/no-data.png' %}" alt="No Applications" style="width: 120px; opacity: 0.7;" class="mb-3">
+                        <h5 class="text-muted">No applications submitted yet</h5>
+                        <button type="button" class="btn btn-outline-primary mt-3" data-toggle="modal" data-target="#addApplicationModal">
+                            <i class="fas fa-plus-circle mr-2"></i>Apply Now
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Application Modal -->
+<div class="modal fade" id="addApplicationModal" tabindex="-1" role="dialog" aria-labelledby="addApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" action="{% url 'social_service:social_welfare_apply' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addApplicationModalLabel">New Social Welfare Application</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="service_type">Service Type</label>
+                        <select class="form-control" id="service_type" name="service_type" required>
+                            <option value="" disabled selected>Select service type</option>
+                            <option value="financial_aid">Financial Aid</option>
+                            <option value="food_assistance">Food Assistance</option>
+                            <option value="medical_assistance">Medical Assistance</option>
+                            <option value="livelihood">Livelihood Program</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose">Purpose of Application</label>
+                        <textarea class="form-control" id="purpose" name="purpose" rows="3" placeholder="Describe the purpose of your application" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="supporting_documents">Supporting Documents (optional)</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="supporting_documents" name="supporting_documents">
+                            <label class="custom-file-label" for="supporting_documents">Choose file</label>
+                        </div>
+                        <small class="form-text text-muted">Upload any relevant documents to support your application.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Cancellation</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this application? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form id="delete-form" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Confirm Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% comment %} <script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#applications-table').DataTable({
+            "order": [[2, "desc"]] // Sort by date applied (newest first)
+        });
+        
+        // Handle delete button click
+        $('.delete-app').on('click', function(e) {
+            e.preventDefault();
+            var appId = $(this).data('app-id');
+            $('#delete-form').attr('action', "{% url 'social_service:application_delete' 0 %}".replace('0', appId));
+            $('#deleteModal').modal('show');
+        });
+    });
+</script> {% endcomment %}
+{% endblock %}

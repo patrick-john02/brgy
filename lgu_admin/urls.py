@@ -46,7 +46,10 @@ from .views import (AdminDashboardView,
                     InventoryItemView,
                     InventoryItemUpdateView,
                     # InventoryTransactionView
-                    AdminProfileView,       
+                    AdminProfileView,  
+                    UserDetailViews, 
+                    EditEmployeeViews,  
+                    ApproveResidentView,  
                      
 )
 app_name = 'lgu_admin'
@@ -55,7 +58,7 @@ urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
     path('profile/', AdminProfileView.as_view(), name='profile'),
     
-    #residents CRUD and ETL
+    #residents CRUD
     path('residents/', AdminResidentsList.as_view(), name='residents_list'),
     path('residents/add/', AddResidentView.as_view(), name='add_resident'),
     path('residents/<int:resident_id>/', ResidentDetailView.as_view(), name='resident_details'),
@@ -65,11 +68,18 @@ urlpatterns = [
     
     path('unverified-residents/', UnverifiedResidentsListView.as_view(), name='unverified_residents'),
     path('resident-accounts/', AdminResidentAccountList.as_view(), name='resident_account_list'),
+    
+    
+    path('approve_resident/<int:user_id>/', ApproveResidentView.as_view(), name='approve_resident'),
 
     #for employee accounts
     path('acounts/', AdminAccountList.as_view(), name='account_list'),
     path("accounts/edit/<int:pk>/", EditEmployeeView.as_view(), name="edit_user"),
+    path("resident_accounts/edit/<int:pk>/", EditEmployeeViews.as_view(), name="edit_user_resident"),
     path('view-user/<int:pk>/', UserDetailView.as_view(), name='view_user'),
+    
+    
+    path('view-user-unverified /<int:pk>/', UserDetailViews.as_view(), name='view_user_residents'),
     path('verify-resident/<int:pk>/', verify_resident, name='verify_resident'),
     path("delete_user/<int:user_id>/", DeleteUserView.as_view(), name="delete_user"),
     

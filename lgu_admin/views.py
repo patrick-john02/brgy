@@ -1,31 +1,29 @@
+from .forms import ResidentForm, UserAccountForm, EditUserAccountForm,ResidentProfileForm, ResidentAccountForm, UserProfileForm, PasswordChangeForm
+from django.views.generic import TemplateView, View, ListView, DetailView, CreateView, UpdateView, FormView
+from .models import ChatThread, Message, InventoryCategory, InventoryItem
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.http import JsonResponse, HttpResponseForbidden
 from core.models import Service, Project, BarangayOfficial
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-from .forms import ResidentForm, UserAccountForm, EditUserAccountForm,ResidentProfileForm, ResidentAccountForm, UserProfileForm, PasswordChangeForm
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, View, ListView, DetailView, CreateView, UpdateView, FormView
-from django.contrib.auth.views import LogoutView
-from core.mixins import AdminRequiredMixin
-from .models import ChatThread, Message, InventoryCategory, InventoryItem
+from django.db.models.functions import ExtractYear
 from residents.models import Resident, Household
+from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy, reverse
-from django.http import JsonResponse, HttpResponseForbidden
+from core.mixins import AdminRequiredMixin
+from core.models import BarangayOfficial
+from django.core.mail import send_mail
+from django.utils.timezone import now
 from django.contrib import messages
 from core.models import CustomUser
-from datetime import date
-from django.utils import timezone
-from django.utils.timezone import now
-from django.conf import settings
-from django.core.mail import send_mail
-from django.db.models.functions import ExtractYear
 from django.db.models import Count
-
-from core.models import BarangayOfficial
-
+from django.utils import timezone
+from django.conf import settings
+from datetime import date
+#residents app folder importations
 from residents.models import (
     CertificateOfIndigency, JobseekerCertificationRequest, CertificateOfGuardianshipRequest,
     CertificateOfGoodMoralCharacterRequest, BarangayBusinessCertificateRequest,
@@ -54,8 +52,6 @@ class AdminDashboardView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
             CertificateOfUnemployment.objects.filter(status="Pending").count() +
             CertificateOfAppearance.objects.filter(status="Pending").count()
         )
-
-        # Count inventory items
         context['inventory_count'] = InventoryItem.objects.count()
         residents_by_year = (
             Resident.objects
@@ -83,16 +79,12 @@ class AdminProfileView(LoginRequiredMixin, AdminRequiredMixin, DetailView):
 
 
 class EditAdminProfileView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
-    """
-    View for editing the admin's profile information.
-    """
     model = CustomUser
     form_class = UserProfileForm
     template_name = 'lgu_admin/edit_profile.html'
     success_url = reverse_lazy('lgu_admin:admin_profile')
     
     def get_object(self, queryset=None):
-        # Return the currently logged-in user (the admin)
         return self.request.user
     
     def form_valid(self, form):
@@ -101,9 +93,6 @@ class EditAdminProfileView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
 
 
 class ChangeAdminPasswordView(LoginRequiredMixin, AdminRequiredMixin, FormView):
-    """
-    View for changing the admin's password.
-    """
     form_class = PasswordChangeForm
     template_name = 'lgu_admin/change_password.html'
     success_url = reverse_lazy('lgu_admin:admin_profile')
@@ -120,9 +109,6 @@ class ChangeAdminPasswordView(LoginRequiredMixin, AdminRequiredMixin, FormView):
         return super().form_valid(form)
     
 #end of profile admin 
-
-
-
 
 
 class AdminResidentsList(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
@@ -220,7 +206,6 @@ class AddResidentView(LoginRequiredMixin, AdminRequiredMixin, View):
 
 #Viewing and Updating Resident Details
 class ResidentDetailView(LoginRequiredMixin, AdminRequiredMixin, View):
-    """View for displaying and editing resident details."""
     template_name = "lgu_admin/residents_details.html"
 
     def get(self, request, resident_id):
@@ -349,6 +334,14 @@ class UnverifiedResidentsListView(LoginRequiredMixin, AdminRequiredMixin, ListVi
     def get_queryset(self):
         return CustomUser.objects.filter(is_verified=False, user_type='resident', is_deleted=False)
 
+class ApproveResidentView(View):
+    def post(self, request, user_id):
+        user = get_object_or_404(CustomUser, pk=user_id)
+        if user.user_type == 'resident':
+            user.is_verified = True
+            user.save()
+            return JsonResponse({"success": True, "message": "User approved successfully."})
+        return JsonResponse({"success": False, "message": "Invalid user."})
 
 class AdminAccountList(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
     template_name = "lgu_admin/accounts.html"
@@ -442,10 +435,38 @@ def verify_resident(request, pk):
         messages.error(request, 'This user cannot be verified.')
 
     return redirect('lgu_admin:view_user', pk=pk)
+
+#edit resident details
+class UserDetailViews(LoginRequiredMixin, AdminRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'lgu_admin/unverified_res.html'
+    context_object_name = 'user'
+
+def verify_resident(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+
+    if user.user_type == 'resident' and not user.is_verified:
+        user.is_verified = True
+        user.save()
+
+        send_mail(
+            subject='Account Verified ✔️',
+            message=f'Hello {user.first_name} {user.last_name},\n\n'
+                    'Your account has been successfully verified by the LGU Admin.\n\n'
+                    'You can now access the system with full functionality.\n\n'
+                    'Thank you!',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        messages.success(request, f'{user.first_name} {user.last_name} has been successfully verified.')
+    else:
+        messages.error(request, 'This user cannot be verified.')
+    return redirect('lgu_admin:view_user_residents', pk=pk)
+
         
 # Edit Employee Details
 class EditEmployeeView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
-    """View for editing employee details."""
     model = CustomUser
     form_class = EditUserAccountForm
     template_name = "lgu_admin/employee_edit.html"
@@ -454,6 +475,28 @@ class EditEmployeeView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
     def get_success_url(self):
         messages.success(self.request, "Employee details updated successfully!")
         return reverse_lazy("lgu_admin:account_list")
+    
+
+class EditEmployeeViews(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = CustomUser
+    form_class = EditUserAccountForm
+    template_name = "lgu_admin/unverified_res.html"
+    context_object_name = "residents"
+
+    def get_success_url(self):
+        messages.success(self.request, "residents account details updated successfully!")
+        return reverse_lazy("lgu_admin:view_user_residents")
+    
+    def approve_user(request, pk):
+        if request.method == 'POST':
+            user = get_object_or_404(CustomUser, pk=pk)
+            try:
+                user.is_verified = True
+                user.save()
+                return JsonResponse({'success': True})
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': str(e)})
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 class DeleteUserView(View):
 
@@ -547,7 +590,7 @@ class SendMessageView(LoginRequiredMixin, AdminRequiredMixin, View):
 class AdminBarangayClearance(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
     template_name = 'lgu_admin/barangay_clearance.html'
 
-class AdminPendingRequestsView(AdminRequiredMixin, View):
+class AdminPendingRequestsView(LoginRequiredMixin, AdminRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -581,7 +624,7 @@ class AdminPendingRequestsView(AdminRequiredMixin, View):
 
 
 
-class PrintCertificateView(View):
+class PrintCertificateView(View, AdminRequiredMixin, LoginRequiredMixin ):
     DOCUMENT_TEMPLATES = {
         "Jobseeker Certification": "lgu_admin/certificate.html",
         "Certificate of Guardianship": "certification/guardianship_certificate.html",
@@ -744,7 +787,7 @@ class PrintCertificateView(View):
 
         return render(request, template, context)
 
-class ApproveCertificationView(View):
+class ApproveCertificationView(View,LoginRequiredMixin, AdminRequiredMixin ):
     MODELS = {
         "Jobseeker Certification": JobseekerCertificationRequest,
         "Certificate of Guardianship": CertificateOfGuardianshipRequest,
@@ -787,7 +830,7 @@ class ApproveCertificationView(View):
 
 
 
-class AdminApprovedRequestsView(AdminRequiredMixin, View):
+class AdminApprovedRequestsView(AdminRequiredMixin, LoginRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -813,7 +856,7 @@ class AdminApprovedRequestsView(AdminRequiredMixin, View):
 
         return JsonResponse(approved_request, safe=False)
 
-class AdminRejectedRequestsView(AdminRequiredMixin, View):
+class AdminRejectedRequestsView(AdminRequiredMixin, LoginRequiredMixin, View):
     models = {
         'Certificate of Indigency': CertificateOfIndigency,
         'Jobseeker Certification': JobseekerCertificationRequest,
@@ -832,7 +875,7 @@ class AdminRejectedRequestsView(AdminRequiredMixin, View):
         approved_request = []
 
         for doc_type, model in self.models.items():
-            requests = model.objects.filter(status="Approved").values('date_requested', 'status').order_by('-date_requested')
+            requests = model.objects.filter(status="Rejected").values('date_requested', 'status').order_by('-date_requested')
             for req in requests:
                 req['document_type'] = doc_type
                 approved_request.append(req)
@@ -1018,7 +1061,7 @@ class AdminOfficialsView(LoginRequiredMixin, AdminRequiredMixin, View):
         # Redirect back for non-AJAX requests
         return redirect('lgu_admin:official')
 
-class DeleteOfficialView(View):
+class DeleteOfficialView(View, LoginRequiredMixin, AdminRequiredMixin ):
     def post(self, request):
         official_id = request.POST.get('id')
         print(f"Official ID: {official_id}")  # Debug print statement

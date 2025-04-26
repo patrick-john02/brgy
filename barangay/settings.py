@@ -54,6 +54,12 @@ INSTALLED_APPS = [
     'lgu_admin',
     'brgy_employees',
     'residents',
+    'HealthAndEmergencyServices',
+    'SocialServicesAndWelfare',
+    'CommunityAndEventManagement',
+    'EducationAndTraining',
+    'BarangayNewsAndUpdates',
+    'BarangaySocialNetwork',
     'widget_tweaks',
       
 ]

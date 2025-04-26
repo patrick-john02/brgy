@@ -121,13 +121,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-    
-
 <form id="delete-form">
     {% csrf_token %}
     <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
@@ -169,11 +162,17 @@
                 <span class="badge badge-warning">Unverified</span>
             </td>
             <td>
-                <a href="{% url 'lgu_admin:view_user' user.pk %}" class="btn btn-sm btn-info">View</a>
+                <a href="{% url 'lgu_admin:edit_user_resident' user.pk %}" class="btn btn-sm btn-info">View</a>
                 <button class="btn btn-sm btn-danger delete-user" data-userid="{{ user.pk }}">
                     Delete
-                </button>                
+                </button>    
+                {% if not user.is_verified %}
+                <button class="btn btn-sm btn-success approve-user" data-userid="{{ user.pk }}">Approve</button>
+            {% endif %}
+            
+                            
             </td>
+            
         </tr>
         {% empty %}
         <tr>
@@ -202,16 +201,17 @@
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Handle delete user action
         document.querySelectorAll(".delete-user").forEach(button => {
             button.addEventListener("click", function () {
                 let userId = this.getAttribute("data-userid");
                 let csrfToken = document.querySelector("#csrf_token")?.value;  // Correct CSRF token retrieval
-    
+
                 if (!csrfToken) {
                     console.error("CSRF token not found. Make sure the form exists.");
                     return;
                 }
-    
+
                 Swal.fire({
                     title: "Are you sure?",
                     text: "This will deactivate the user, but you can restore them later.",
@@ -246,7 +246,52 @@
                 });
             });
         });
-    });    
+
+        document.querySelectorAll(".approve-user").forEach(button => {
+            button.addEventListener("click", function () {
+                let userId = this.getAttribute("data-userid");
+                let csrfToken = document.querySelector("#csrf_token")?.value;
+
+                if (!csrfToken) {
+                    console.error("CSRF token not found.");
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You are about to approve this resident account.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, approve it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/lgu_admin/approve_resident/${userId}/`, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": csrfToken,
+                                "Content-Type": "application/json"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire("Approved!", "User has been approved.", "success")
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire("Error!", data.message || "Something went wrong.", "error");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Approve request failed:", error);
+                            Swal.fire("Error!", "Failed to approve the user.", "error");
+                        });
+                    }
+                });
+            });
+        });
+    });
 </script>
 
 <script>

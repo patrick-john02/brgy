@@ -1,0 +1,60 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>Family Program Details</h4>
+                <span class="ml-1">Learn more about this family welfare program</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'residents:dashboard' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'education_training:family_program_list' %}">Programs</a></li>
+                <li class="breadcrumb-item active">{{ program.title }}</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="card-title">{{ program.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Description:</strong>
+                        <p class="card-text">{{ program.description|linebreaksbr }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Target Audience:</strong>
+                        <p class="card-text">{{ program.target_audience }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Date:</strong>
+                        <p class="card-text">{{ program.date }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Location:</strong>
+                        <p class="card-text">{{ program.location }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Contact Person:</strong>
+                        <p class="card-text">{{ program.contact_person }}</p>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    Posted By: {{program.posted_by}} on {{ program.created_at|date:"M d, Y H:i" }}
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'education_training:family_program_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

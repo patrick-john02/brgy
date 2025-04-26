@@ -25,7 +25,12 @@ urlpatterns = [
     path('lgu_admin/', include('lgu_admin.urls', namespace='lgu_admin')),
     path('brgy_employees/', include('brgy_employees.urls', namespace='brgy_employees')),
     path('residents/', include('residents.urls' , namespace='residents')),
-    # path("chat/", include("chat.urls")),
+    path('SocialServiceandWelfare/', include('SocialServicesAndWelfare.urls' , namespace='social_service')),
+    path('CommunityandEventManagement/', include('CommunityAndEventManagement.urls' , namespace='community_event')),
+    path('EducationandTraining/', include('EducationAndTraining.urls' , namespace='education_training')),
+    path('BarangayNewsandUpdates/', include('BarangayNewsAndUpdates.urls' , namespace='barangay_news')),
+    path('HealthandEmergencyServices/', include('HealthAndEmergencyServices.urls' , namespace='health_emergency')),
+    # path("chat/", include("chat.urls")), HealthAndEmergencyServices
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

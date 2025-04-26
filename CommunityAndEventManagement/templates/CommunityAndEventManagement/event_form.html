@@ -1,0 +1,16 @@
+{% extends "residents/includes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Create a Community Event</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-success">Submit Event</button>
+        <a href="{% url 'community_event:event_list' %}" class="btn btn-secondary">Back to Events</a>
+    </form>
+</div>
+{% endblock %}

@@ -32,8 +32,7 @@
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-layout-25"></i><span class="nav-text">Inventory Records</span></a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'lgu_admin:brgy_equipment'%}">Equipment</a></li>
-                    {% comment %} <li><a href="{%url 'lgu_admin:brgy_supplies'%}">Supplies</a></li> {% endcomment %}
+                    <li><a href="{% url 'lgu_admin:inventory_items'%}">Equipment</a></li>
                 </ul>
             </li>
 
@@ -47,6 +46,18 @@
                 </ul>
             </li> {% endcomment %}
 
+            <li class="nav-label">Services</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-single-copy-06"></i><span class="nav-text">Barangay Services</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'lgu_admin:service'%}">Health and Emergency Services</a></li>
+                    <li><a href="{% url 'lgu_admin:project'%}">Social Services and Welfare</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Community and Event Management</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Education and Training</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Barangay News and Updates</a></li>
+                </ul>
+            </li>
+
             <li class="nav-label">Public Information</li>
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-single-copy-06"></i><span class="nav-text">Website Content</span></a>
@@ -56,6 +67,8 @@
                     <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li>
                 </ul>
             </li>
+
+            
 
 
             <li class="nav-label">Archives</li>
