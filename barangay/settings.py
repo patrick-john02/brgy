@@ -184,7 +184,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/default_dashboard/'
-LOGOUT_REDIRECT_URL = '/login/'  # Redirect users to login after logout
+LOGOUT_REDIRECT_URL = '/login/'  
 LOGIN_URL = '/login/'  # Default login URL
 
 AUTH_USER_MODEL = 'core.CustomUser'

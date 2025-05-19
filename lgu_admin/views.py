@@ -107,7 +107,6 @@ class ChangeAdminPasswordView(LoginRequiredMixin, AdminRequiredMixin, FormView):
         update_session_auth_hash(self.request, user)
         messages.success(self.request, 'Password changed successfully!')
         return super().form_valid(form)
-    
 #end of profile admin 
 
 

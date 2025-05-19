@@ -47,7 +47,7 @@ class CustomUser(AbstractUser):
 
     def delete(self, *args, **kwargs):
         self.is_deleted = True
-        self.is_active = False  # Disable login
+        self.is_active = False
         self.save()
 
     def restore(self):
@@ -60,9 +60,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.get_user_type_display()})"
-
-
-        
+  
 class Service(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()

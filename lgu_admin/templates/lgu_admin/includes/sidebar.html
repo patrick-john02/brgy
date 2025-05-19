@@ -50,11 +50,11 @@
             <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
                         class="icon icon-single-copy-06"></i><span class="nav-text">Barangay Services</span></a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'lgu_admin:service'%}">Health and Emergency Services</a></li>
-                    <li><a href="{% url 'lgu_admin:project'%}">Social Services and Welfare</a></li>
-                    <li><a href="{% url 'lgu_admin:official'%}">Community and Event Management</a></li>
+                    <li><a href="{% url 'health_emergency:health_issues'%}">Health and Emergency Services</a></li>
+                    <li><a href="{% url 'social_service:social_welfare_admin_list'%}">Social Services and Welfare</a></li>
+                    {% comment %} <li><a href="{% url 'lgu_admin:official'%}">Community and Event Management</a></li>
                     <li><a href="{% url 'lgu_admin:official'%}">Education and Training</a></li>
-                    <li><a href="{% url 'lgu_admin:official'%}">Barangay News and Updates</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Barangay News and Updates</a></li> {% endcomment %}
                 </ul>
             </li>
 

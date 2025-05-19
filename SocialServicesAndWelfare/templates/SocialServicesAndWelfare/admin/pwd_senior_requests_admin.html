@@ -1,0 +1,50 @@
+{% extends "lgu_admin/includes/base.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>PWD & Senior Service Requests</h2>
+
+        <!-- Button to open the modal for creating a new request -->
+        <a href="{% url 'social_service:pwd_senior_request' %}" class="btn btn-primary mb-3">Create New Request</a>
+
+        <!-- Requests Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Resident</th>
+                    <th>Service Type</th>
+                    <th>Status</th>
+                    <th>Date Requested</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                    <tr>
+                        <td>{{ request.resident.get_full_name }}</td>
+                        <td>{{ request.get_service_type_display }}</td>
+                        <td>{{ request.get_status_display }}</td>
+                        <td>{{ request.date_requested }}</td>
+                        <td>
+                            <a href="{% url 'social_service:pwd_senior_request_detail' request.id %}" class="btn btn-info btn-sm">View</a>
+                            <a href="{% url 'social_service:pwd_senior_request_update' request.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <!-- Optionally add a delete button if needed -->
+                            <!-- <a href="{% url 'social_service:delete_pwd_senior_request' request.id %}" class="btn btn-danger btn-sm">Delete</a> -->
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No requests found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Additional JS for modals, tooltips, or other functionality -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

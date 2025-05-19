@@ -1,0 +1,79 @@
+{% extends "lgu_admin/includes/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Navbar with Tabs -->
+   
+<div class="container mt-4">
+    <h2>Emergency Contacts</h2>
+
+    <!-- Button to open the modal for creating a new contact -->
+    {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createContactModal">
+        Add Emergency Contact
+    </button> {% endcomment %}
+
+    <!-- Emergency Contact Table -->
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Relationship</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+                <th>Reported By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.relationship }}</td>
+                <td>{{ contact.phone_number }}</td>
+                <td>{{ contact.user.username }}</td>
+                <td>
+                    <a href="{% url 'health_emergency:update_emergency_contact' contact.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'health_emergency:delete_emergency_contact' contact.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No emergency contacts found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal for creating a new emergency contact -->
+<div class="modal fade" id="createContactModal" tabindex="-1" role="dialog" aria-labelledby="createContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createContactModalLabel">Create Emergency Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'health_emergency:create_emergency_contact' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}  <!-- Display the form fields here -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Contact</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}
