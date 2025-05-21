@@ -114,6 +114,7 @@ urlpatterns = [
     
     path('officials/', AdminOfficialsView.as_view(), name='official'),
     path('delete_official/', DeleteOfficialView.as_view(), name='delete_official'),
+    
 
     
     

@@ -27,7 +27,7 @@
                         <td>{{ application.date_applied }}</td>
                         <td>
                             <a href="{% url 'social_service:application_detail' application.id %}" class="btn btn-info btn-sm">View</a>
-                            <a href="{% url 'social_service:social_welfare_apply' %}" class="btn btn-warning btn-sm">Edit</a>
+                            {% comment %} <a href="{% url 'social_service:social_welfare_apply' %}" class="btn btn-warning btn-sm">Edit</a> {% endcomment %}
                             {% comment %} <!-- Optionally add a delete button if needed -->
                             <!-- <a href="{% url 'social_service:delete_application' application.id %}" class="btn btn-danger btn-sm">Delete</a> --> {% endcomment %}
                         </td>

@@ -167,7 +167,7 @@
         <form method="POST" action="{% url 'lgu_admin:approve_certificate' request_id=request_id %}">
             {% csrf_token %}
             <!-- Add hidden field for document_type -->
-            <input type="hidden" name="document_type" value="Certificate of Residency">  <!-- Adjust value dynamically if needed -->
+            <input type="hidden" name="document_type" value="Unemployment Certificate">  <!-- Adjust value dynamically if needed -->
             <button type="submit" class="approve-btn">Approve Certificate</button>
         </form>
         <button class="print-btn" onclick="printCertificate()">Print Certificate</button>

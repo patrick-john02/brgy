@@ -104,7 +104,7 @@ class ResidentRegistrationView(View):
                     
                 login(request, user)
                 messages.success(request, "Registration successful. Welcome!")
-                return redirect('residents:resident_dashboard')
+                return redirect('residents:resident_upload_id')
                 
             except Resident.DoesNotExist:
                 messages.error(request, "Sorry, you are not registered on the list. Please inquire in our respective barangay.")

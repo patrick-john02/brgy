@@ -804,28 +804,29 @@ class ApproveCertificationView(View,LoginRequiredMixin, AdminRequiredMixin ):
         model = self.MODELS.get(document_type)
 
         if not model:
-            print(f"❌ Error: Invalid document type - {document_type}")  # Debugging
+            print(f"Error: Invalid document type - {document_type}")  # Debugging
             return JsonResponse({"error": "Invalid document type"}, status=400)
 
         try:
             cert_request = model.objects.get(id=request_id)
-            print(f"✅ Found {document_type} request with ID: {request_id}")  # Debugging
+            print(f"Found {document_type} request with ID: {request_id}")  # Debugging
         except model.DoesNotExist:
             print(f"❌ Error: {document_type} request with ID {request_id} not found!")  # Debugging
             return JsonResponse({"error": f"{document_type} request not found"}, status=404)
 
-        # Update the status to Approved
         cert_request.status = "Approved"
         cert_request.date_approved = now()
         cert_request.save()
 
-        print(f"✅ Successfully approved {document_type} with ID: {request_id}")  # Debugging
+        print(f"Successfully approved {document_type} with ID: {request_id}")  # Debugging
 
-        return JsonResponse({
-            "message": f"{document_type} approved successfully",
-            "status": cert_request.status,
-            "date_approved": cert_request.date_approved.strftime('%B %d, %Y')
-        })
+        # return JsonResponse({
+        #     "message": f"{document_type} approved successfully",
+        #     "status": cert_request.status,
+        #     "date_approved": cert_request.date_approved.strftime('%B %d, %Y')
+        # })
+        
+        return redirect(reverse('lgu_admin:brgy_clearance'))
 
 
 
