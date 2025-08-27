@@ -50,7 +50,15 @@ from .views import (AdminDashboardView,
                     UserDetailViews, 
                     EditEmployeeViews,  
                     ApproveResidentView,  
-                     
+                    
+                    AdminComplaintsView,
+                    
+                    AdminAnnouncementsView,
+                    AddAnnouncementView,
+                    UpdateAnnouncementView,
+                    DeleteAnnouncementView,
+                    ToggleAnnouncementStatusView,
+
 )
 app_name = 'lgu_admin'
 
@@ -125,6 +133,17 @@ urlpatterns = [
     # path('inventory/transactions/', InventoryTransactionView.as_view(), name='inventory_transactions'),
     
     path('logout/', CustomLogoutView.as_view(), name='logout'),
+    
+    path('complaints/', AdminComplaintsView.as_view(), name='complaints'),
+    
+    path('announcements/', AdminAnnouncementsView.as_view(), name='announcements'),
+    path('announcements/add/', AddAnnouncementView.as_view(), name='add_announcement'),
+
+    path('announcements/update/<int:announcement_id>/', UpdateAnnouncementView.as_view(), name='update_announcement'),
+    path('announcements/delete/<int:announcement_id>/', DeleteAnnouncementView.as_view(), name='delete_announcement'),
+    path('announcements/toggle/<int:announcement_id>/', ToggleAnnouncementStatusView.as_view(), name='toggle_announcement_status'),
+
+    
 ]
 websocket_urlpatterns = [
     path("ws/chat/<int:thread_id>/", ChatConsumer.as_asgi()),

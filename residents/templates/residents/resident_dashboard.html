@@ -14,60 +14,7 @@
             </ol>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-one card-body">
-                    <div class="stat-icon d-inline-block">
-                        <i class="ti-package text-primary border-primary me-2"></i> 
-                    </div>
-                    <div class="stat-content d-inline-block">
-                        <div class="stat-text">Inventory</div>
-                        <div class="stat-digit">1,012</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-one card-body">
-                    <div class="stat-icon d-inline-block">
-                        <i class="ti-files text-warning border-warning me-2"></i>
-                    </div>
-                    <div class="stat-content d-inline-block">
-                        <div class="stat-text">Pending</div>
-                        <div class="stat-digit">961</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-one card-body">
-                    <div class="stat-icon d-inline-block">
-                        <i class="ti-check-box text-success border-success me-2"></i>
-                    </div>
-                    <div class="stat-content d-inline-block">
-                        <div class="stat-text">Approved</div>
-                        <div class="stat-digit">770</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="card">
-                <div class="stat-widget-one card-body">
-                    <div class="stat-icon d-inline-block">
-                        <i class="ti-alert text-danger border-danger me-2"></i>
-                    </div>
-                    <div class="stat-content d-inline-block">
-                        <div class="stat-text">Rejected</div>
-                        <div class="stat-digit">2,781</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     <div class="row">
         <div class="col-xl-12 col-lg-8 col-md-8">
             <div class="card">
@@ -75,23 +22,24 @@
                     <h5 class="card-title mb-0"> Barangay News & Announcements</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <h6 class="mb-1 text-dark">Scheduled Water Interruption on April 30</h6>
-                            <small class="text-muted">Posted: April 25, 2025</small>
-                            <p class="mb-0">Please store enough water. Interruption starts at 8:00 AM until 6:00 PM.</p>
-                        </li>
-                        <li class="mb-3">
-                            <h6 class="mb-1 text-dark">Barangay Clean-Up Drive This Weekend</h6>
-                            <small class="text-muted">Posted: April 24, 2025</small>
-                            <p class="mb-0">Volunteers are welcome! Meet at the barangay hall by 7:00 AM Saturday.</p>
-                        </li>
-                        <li>
-                            <h6 class="mb-1 text-dark">New Curfew Policy Implemented</h6>
-                            <small class="text-muted">Posted: April 22, 2025</small>
-                            <p class="mb-0">Curfew is now from 10:00 PM to 4:00 AM. Kindly cooperate for safety.</p>
-                        </li>
-                    </ul>
+                   <ul class="list-unstyled announcement-list">
+    {% if announcements %}
+        {% for announcement in announcements %}
+            <li>
+                <h6 class="announcement-title">{{ announcement.title }}</h6>
+                <small class="announcement-date">Posted: {{ announcement.date_posted|date:"F d, Y" }}</small>
+                <p class="announcement-text">{{ announcement.content }}</p>
+                {% if announcement.image %}
+    <img src="{{ announcement.image.url }}" alt="announcement image" class="img-fluid mb-2 rounded">
+{% endif %}
+
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>No announcements available.</li>
+    {% endif %}
+</ul>
+
                 </div>
             </div>
         </div>

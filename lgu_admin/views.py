@@ -1,8 +1,13 @@
 from .forms import ResidentForm, UserAccountForm, EditUserAccountForm,ResidentProfileForm, ResidentAccountForm, UserProfileForm, PasswordChangeForm
 from django.views.generic import TemplateView, View, ListView, DetailView, CreateView, UpdateView, FormView
-from .models import ChatThread, Message, InventoryCategory, InventoryItem
+from .models import ChatThread, Message, InventoryCategory, InventoryItem, BarangayReport, BarangayAnnouncement
+from django.db.models import Q, Count
+from django.db import transaction
+from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseForbidden
+from django.views import View
 from core.models import Service, Project, BarangayOfficial
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -64,6 +69,50 @@ class AdminDashboardView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
         context['residents_by_year'] = residents_by_year
 
         return context
+
+class AdminComplaintsView(LoginRequiredMixin, AdminRequiredMixin, View):
+    template_name = 'lgu_admin/reports.html'
+
+    def get(self, request):
+        # Get filter parameters
+        type_filter = request.GET.get('type', '')
+        search_query = request.GET.get('search', '')
+        
+        # Base queryset
+        reports = BarangayReport.objects.all().order_by('-date_created')
+        
+        # Apply filters
+        if type_filter:
+            reports = reports.filter(report_type=type_filter)
+        if search_query:
+            reports = reports.filter(
+                Q(name__icontains=search_query) |
+                Q(email__icontains=search_query) |
+                Q(description__icontains=search_query)
+            )
+        
+        # Get statistics
+        total_reports = BarangayReport.objects.count()
+        complaint_count = BarangayReport.objects.filter(report_type='complaint').count()
+        incident_count = BarangayReport.objects.filter(report_type='incident').count()
+        accident_count = BarangayReport.objects.filter(report_type='accident').count()
+        
+        # Pagination
+        paginator = Paginator(reports, 12)  # Show 12 reports per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        context = {
+            'reports': page_obj,
+            'total_reports': total_reports,
+            'complaint_count': complaint_count,
+            'incident_count': incident_count,
+            'accident_count': accident_count,
+            'type_filter': type_filter,
+            'search_query': search_query,
+        }
+        
+        return render(request, self.template_name, context)
     
 class AdminProfileView(LoginRequiredMixin, AdminRequiredMixin, DetailView):
     model = CustomUser
@@ -1168,3 +1217,195 @@ class CustomLogoutView(LogoutView):
         return super().dispatch(request, *args, **kwargs)
 
     next_page = reverse_lazy('core:login')
+    
+
+class AdminAnnouncementsView(LoginRequiredMixin, AdminRequiredMixin, View):
+    def get(self, request):
+        try:
+            announcements_list = BarangayAnnouncement.objects.all().order_by('-date_posted')
+
+            paginator = Paginator(announcements_list, 6)
+            page_number = request.GET.get('page', 1)
+            announcements = paginator.get_page(page_number)
+
+            context = {
+                'announcements': announcements,
+                'total_announcements': announcements_list.count(),
+                'published_count': announcements_list.filter(is_published=True).count(),
+                'draft_count': announcements_list.filter(is_published=False).count(),
+            }
+
+            return render(request, 'lgu_admin/announcements.html', context)
+
+        except Exception as e:
+            messages.error(request, f"Error loading announcements: {str(e)}")
+            return render(request, 'lgu_admin/announcements.html', {
+                'announcements': [],
+                'total_announcements': 0,
+                'published_count': 0,
+                'draft_count': 0
+            })
+
+
+
+class AddAnnouncementView(LoginRequiredMixin, AdminRequiredMixin, View):
+    def post(self, request):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            try:
+                title = request.POST.get('title', '').strip()
+                content = request.POST.get('content', '').strip()
+                is_published = request.POST.get('is_published') == 'on'
+                image = request.FILES.get('image')
+
+                errors = {}
+                if not title:
+                    errors['title'] = 'Title is required'
+                elif len(title) > 200:
+                    errors['title'] = 'Title must be less than 200 characters'
+
+                if not content:
+                    errors['content'] = 'Content is required'
+                elif len(content) > 5000:
+                    errors['content'] = 'Content is too long (max 5000 characters)'
+
+                if image:
+                    if image.size > 5 * 1024 * 1024:
+                        errors['image'] = 'Image file too large (max 5MB)'
+                    allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+                    if image.content_type not in allowed_types:
+                        errors['image'] = 'Invalid image format. Use JPG, PNG, GIF, or WebP'
+
+                if errors:
+                    return JsonResponse({'success': False, 'errors': errors})
+
+                with transaction.atomic():
+                    announcement = BarangayAnnouncement.objects.create(
+                        title=title,
+                        content=content,
+                        image=image,
+                        is_published=is_published
+                    )
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Announcement "{title}" has been posted successfully!',
+                    'announcement_id': announcement.id
+                })
+
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'general': f'Error creating announcement: {str(e)}'}
+                })
+
+        return redirect('lgu_admin:announcements')
+class UpdateAnnouncementView(LoginRequiredMixin, AdminRequiredMixin, View):
+    def post(self, request, announcement_id):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            try:
+                announcement = get_object_or_404(BarangayAnnouncement, id=announcement_id)
+
+                title = request.POST.get('title', '').strip()
+                content = request.POST.get('content', '').strip()
+                is_published = request.POST.get('is_published') == 'on'
+                new_image = request.FILES.get('image')
+
+                errors = {}
+                if not title:
+                    errors['title'] = 'Title is required'
+                elif len(title) > 200:
+                    errors['title'] = 'Title must be less than 200 characters'
+
+                if not content:
+                    errors['content'] = 'Content is required'
+                elif len(content) > 5000:
+                    errors['content'] = 'Content is too long (max 5000 characters)'
+
+                if new_image:
+                    if new_image.size > 5 * 1024 * 1024:
+                        errors['image'] = 'Image file too large (max 5MB)'
+                    allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+                    if new_image.content_type not in allowed_types:
+                        errors['image'] = 'Invalid image format. Use JPG, PNG, GIF, or WebP'
+
+                if errors:
+                    return JsonResponse({'success': False, 'errors': errors})
+
+                with transaction.atomic():
+                    if new_image and announcement.image:
+                        if default_storage.exists(announcement.image.name):
+                            default_storage.delete(announcement.image.name)
+
+                    announcement.title = title
+                    announcement.content = content
+                    announcement.is_published = is_published
+                    if new_image:
+                        announcement.image = new_image
+                    announcement.save()
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Announcement "{title}" has been updated successfully!'
+                })
+
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'errors': {'general': f'Error updating announcement: {str(e)}'}
+                })
+
+        return redirect('lgu_admin:announcements')
+
+
+class DeleteAnnouncementView(LoginRequiredMixin, AdminRequiredMixin, View):
+    def post(self, request, announcement_id):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            try:
+                announcement = get_object_or_404(BarangayAnnouncement, id=announcement_id)
+
+                title = announcement.title
+                if announcement.image and default_storage.exists(announcement.image.name):
+                    default_storage.delete(announcement.image.name)
+
+                announcement.delete()
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Announcement "{title}" has been deleted successfully!'
+                })
+
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Error deleting announcement: {str(e)}'
+                })
+
+        return redirect('lgu_admin:announcements')
+
+
+class ToggleAnnouncementStatusView(LoginRequiredMixin, AdminRequiredMixin, View):
+    def post(self, request, announcement_id):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            try:
+                announcement = get_object_or_404(BarangayAnnouncement, id=announcement_id)
+
+                announcement.is_published = not announcement.is_published
+                announcement.save()
+
+                status = "published" if announcement.is_published else "unpublished"
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'Announcement "{announcement.title}" has been {status}!',
+                    'is_published': announcement.is_published
+                })
+
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Error toggling status: {str(e)}'
+                })
+
+        return redirect('lgu_admin:announcements')
+
+

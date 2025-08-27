@@ -26,7 +26,18 @@ class BarangayReport(models.Model):
 
     def __str__(self):
         return f"Report by {self.name} - {self.report_type} - {self.date_created}"
-    
+
+class BarangayAnnouncement(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = models.ImageField(upload_to='lgu_admin/announcements/', null=True, blank=True)
+    date_posted = models.DateTimeField(auto_now_add=True)
+    is_published = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.title} - Posted on {self.date_posted.strftime('%Y-%m-%d')}"
+
+
 class ChatThread(models.Model):
 
     user1 = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="chat_threads_initiated")

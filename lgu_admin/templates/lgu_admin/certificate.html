@@ -153,9 +153,10 @@
                 <select id="year"></select>,
                 in Barangay Bangad, Santa Maria, Isabela.
             </p>
-            <p id="issued_date_text" style="display: none;">
-                Signed this <span id="selected_date"></span> in Barangay Bangad, Santa Maria, Isabela.
-            </p>
+                <p id="issued_date_text">
+                    Issued this day <span id="selected_date"></span> in Barangay Bangad, Santa Maria, Isabela.
+                </p>
+
         </div>
         <div class="signature">
             <p><b>Hon. MEL L. MANGUZ</b></p>
@@ -178,7 +179,7 @@
         const daySelect = document.getElementById("day");
         const monthSelect = document.getElementById("month");
         const yearSelect = document.getElementById("year");
-
+        
         for (let i = 1; i <= 31; i++) {
             let option = document.createElement("option");
             option.value = i;

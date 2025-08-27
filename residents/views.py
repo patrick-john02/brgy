@@ -9,7 +9,9 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
 from core.models import CustomUser
+from lgu_admin.models import BarangayAnnouncement
 from django.views import View
+from django.core.paginator import Paginator
 import pytz
 from.forms import (JobseekerCertificationForm,
                    CertificateOfGuardianshipForm,
@@ -46,6 +48,15 @@ class ResidentDashboardView(LoginRequiredMixin, ResidentRequiredMixin, TemplateV
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         return context
+    def get(self, request):
+        announcements_list = BarangayAnnouncement.objects.filter(
+            is_published=True
+        ).order_by('-date_posted')[:5]  # Only show the 5 most recent
+
+        context = {
+            'announcements': announcements_list,
+        }
+        return render(request, 'residents/resident_dashboard.html', context)
 
 class ResidentUploadIDView(LoginRequiredMixin, View):
     template_name = 'residents/unverified_dashboard.html'
@@ -270,3 +281,31 @@ class CustomLogoutView(LogoutView):
         return super().dispatch(request, *args, **kwargs)
 
     next_page = reverse_lazy('core:login')
+    
+    
+# Additional utility view for residents to see published announcements
+class PublicAnnouncementsView(View):
+    """View for residents to see published announcements"""
+    
+    def get(self, request):
+        try:
+            # Get only published announcements, ordered by latest first
+            announcements_list = BarangayAnnouncement.objects.filter(
+                is_published=True
+            ).order_by('-date_posted')
+            
+            # Pagination - 10 announcements per page for public view
+            paginator = Paginator(announcements_list, 10)
+            page_number = request.GET.get('page', 1)
+            announcements = paginator.get_page(page_number)
+            
+            context = {
+                'announcements': announcements,
+                'total_announcements': announcements_list.count(),
+            }
+            
+            return render(request, 'public/announcements.html', context)
+            
+        except Exception as e:
+            messages.error(request, f"Error loading announcements: {str(e)}")
+            return render(request, 'public/announcements.html', {'announcements': []})

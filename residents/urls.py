@@ -13,6 +13,7 @@ from .views import (ResidentDashboardView,
                     ResidentDocumentApplyPrograms,
                     InventoryBorrow,
                     ResidentsProfileView,
+                    PublicAnnouncementsView
 )
 
 
@@ -38,6 +39,9 @@ urlpatterns = [
     path('Programs/', ResidentDocumentApplyPrograms.as_view(), name='apply_programs'),
     path('inventory_borrow', InventoryBorrow.as_view(), name='inventory_borrow'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
+    
+    
+    path('public/announcements/', PublicAnnouncementsView.as_view(), name='public_announcements'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -7,16 +7,13 @@ from residents.models import Resident, Household
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
-from lgu_admin.models import BarangayReport
 from django.shortcuts import redirect
-from django.http import JsonResponse
 from django.contrib import messages
 from django.db import transaction
 from django.conf import settings
 from django.urls import reverse
 from django.db.models import Q
-import openai
-import json
+
 
 User = get_user_model()
 
@@ -43,7 +40,7 @@ class LandingPageView(View):
 
     def get(self, request):
         context = {
-            "form": BarangayReportForm(),  # Pass the form to the template
+            "form": BarangayReportForm(),
             "total_male": Resident.objects.filter(gender="M", is_active=True).count(),
             "total_female": Resident.objects.filter(gender="F", is_active=True).count(),
             "total_population": Resident.objects.filter(is_active=True).count(),
@@ -65,7 +62,6 @@ class LandingPageView(View):
             messages.error(request, "There was an error with your submission. Please check the form.")
 
         return redirect("core:landing")
-
 
 class ResidentRegistrationView(View):
     template_name = 'core/registration.html'
@@ -112,39 +108,6 @@ class ResidentRegistrationView(View):
                 messages.error(request, "Multiple resident records found. Please contact the barangay office for assistance.")
         
         return render(request, self.template_name, {'form': form})
-
-def ai_response(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        user_message = data.get('message')
-
-        openai.api_key = settings.OPENROUTER_API_KEY
-        openai.base_url = "https://openrouter.ai/api/v1/"
-
-        try:
-            response = openai.chat.completions.create(
-                model="meta-llama/llama-3-8b-instruct",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are an AI Assistant dedicated to providing information strictly about Barangay-related topics only. "
-                            "If the user's question is not related to the Barangay (such as technology, personal life, or entertainment), "
-                            "politely respond with 'I'm here to assist with Barangay-related information only.'"
-                        )
-                    },
-                    {"role": "user", "content": user_message}
-                ]
-            )
-
-            ai_reply = response.choices[0].message.content
-
-        except openai.OpenAIError as e:
-            ai_reply = f"AI Error: {str(e)}"
-        except Exception as e:
-            ai_reply = f"Unexpected Error: {str(e)}"
-
-        return JsonResponse({'response': ai_reply})
 
 class ErrorPageView(TemplateView):
     template_name = 'error/page-not-authorized.html'

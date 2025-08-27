@@ -1,0 +1,387 @@
+{% extends "lgu_admin/includes/base.html" %}
+{% block content %}
+{% load static %}
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div id="uploadResult"></div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a href="#">Announcements</a></li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Button to trigger modal -->
+    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#announcementModal">
+        <i class="fa fa-plus"></i> Add New Announcement
+    </button>
+
+    <!-- Bootstrap Modal for Adding Announcement -->
+    <div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="announcementModalLabel">📢 Post New Announcement</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="announcementForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Title *</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter announcement title" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Content *</label>
+                            <textarea class="form-control" rows="6" name="content" placeholder="Enter announcement content..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Image (Optional)</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-upload"></i></span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="image" id="imageInput" accept="image/*">
+                                    <label class="custom-file-label" for="imageInput">Choose file</label>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Accepted formats: JPG, PNG, GIF (Max: 5MB)</small>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" name="is_published" id="isPublished" checked>
+                                <label class="custom-control-label" for="isPublished">Publish immediately</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa fa-bullhorn"></i> Post Announcement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Editing Announcement -->
+    <div class="modal fade" id="updateAnnouncementModal" tabindex="-1" aria-labelledby="updateAnnouncementModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateAnnouncementModalLabel">✏️ Edit Announcement</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateAnnouncementForm" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" id="announcementId">
+                        
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Title *</label>
+                            <input type="text" class="form-control" name="title" id="announcementTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Content *</label>
+                            <textarea class="form-control" rows="6" name="content" id="announcementContent" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Current Image</label>
+                            <img id="currentAnnouncementImage" src="" class="img-fluid rounded mb-2" style="max-width: 150px; display: none;">
+                            <p id="noImageText" class="text-muted" style="display: none;">No image uploaded</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-dark font-weight-bold">Update Image (Optional)</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-upload"></i></span>
+                                </div>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="image" id="announcementImage" accept="image/*">
+                                    <label class="custom-file-label" for="announcementImage">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" name="is_published" id="updateIsPublished">
+                                <label class="custom-control-label" for="updateIsPublished">Published</label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fa fa-save"></i> Update Announcement
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcements List -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title mb-0">📢 Posted Announcements</h4>
+        </div>
+        <div class="card-body">
+            {% if announcements %}
+            <div class="row">
+                {% for announcement in announcements %}
+                <div class="col-lg-6 col-md-12 mb-4">
+                    <div class="card announcement-card shadow-sm border-0 h-100">
+                        {% if announcement.image %}
+                        <img src="{{ announcement.image.url }}" class="card-img-top" alt="Announcement Image" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title text-primary mb-0">{{ announcement.title }}</h5>
+                                <span class="badge {% if announcement.is_published %}badge-success{% else %}badge-secondary{% endif %}">
+                                    {% if announcement.is_published %}Published{% else %}Draft{% endif %}
+                                </span>
+                            </div>
+                            <p class="card-text text-muted small mb-2">
+                                <i class="fa fa-calendar"></i> Posted on: {{ announcement.date_posted|date:"F d, Y g:i A" }}
+                            </p>
+                            <p class="card-text description flex-grow-1">
+                                {{ announcement.content|truncatewords:25 }}
+                            </p>
+                            <div class="mt-auto">
+                                <a href="#" class="btn btn-sm btn-outline-info read-more" data-content="{{ announcement.content }}">
+                                    <i class="fa fa-eye"></i> Read More
+                                </a>
+                                <button class="btn btn-sm btn-outline-warning edit-announcement" 
+                                        data-announcement-id="{{ announcement.id }}" 
+                                        data-title="{{ announcement.title }}" 
+                                        data-content="{{ announcement.content }}" 
+                                        data-image="{{ announcement.image.url|default:'' }}"
+                                        data-published="{{ announcement.is_published }}"
+                                        data-toggle="modal" 
+                                        data-target="#updateAnnouncementModal">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger delete-announcement" data-announcement-id="{{ announcement.id }}">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination (if needed) -->
+            {% if announcements.has_other_pages %}
+            <nav aria-label="Announcements pagination">
+                <ul class="pagination justify-content-center">
+                    {% if announcements.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ announcements.previous_page_number }}">&laquo; Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in announcements.paginator.page_range %}
+                        {% if announcements.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if announcements.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ announcements.next_page_number }}">Next &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fa fa-bullhorn fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No announcements posted yet.</p>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#announcementModal">
+                    <i class="fa fa-plus"></i> Post Your First Announcement
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .announcement-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-left: 4px solid #007bff;
+    }
+    .announcement-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    .description {
+        line-height: 1.6;
+        color: #6c757d;
+    }
+    .custom-file-label::after {
+        content: "Browse";
+    }
+    .badge {
+        font-size: 0.75em;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Handle file input label update
+        document.querySelectorAll('.custom-file-input').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file';
+                const label = e.target.nextElementSibling;
+                label.innerHTML = fileName;
+            });
+        });
+
+        // Handle "Read More" functionality
+        document.querySelectorAll(".read-more").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                let desc = this.parentElement.previousElementSibling;
+                const fullContent = this.getAttribute("data-content");
+                
+                if (this.innerHTML.includes("Read More")) {
+                    desc.innerHTML = fullContent;
+                    this.innerHTML = '<i class="fa fa-eye-slash"></i> Show Less';
+                } else {
+                    desc.innerHTML = fullContent.split(' ').slice(0, 25).join(' ') + '...';
+                    this.innerHTML = '<i class="fa fa-eye"></i> Read More';
+                }
+            });
+        });
+
+        // Handle Edit Announcement
+        document.querySelectorAll(".edit-announcement").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const announcementId = this.getAttribute("data-announcement-id");
+                const announcementTitle = this.getAttribute("data-title");
+                const announcementContent = this.getAttribute("data-content");
+                const announcementImage = this.getAttribute("data-image");
+                const isPublished = this.getAttribute("data-published") === "True";
+        
+                document.getElementById("announcementId").value = announcementId;
+                document.getElementById("announcementTitle").value = announcementTitle;
+                document.getElementById("announcementContent").value = announcementContent;
+                document.getElementById("updateIsPublished").checked = isPublished;
+                
+                if (announcementImage) {
+                    document.getElementById("currentAnnouncementImage").src = announcementImage;
+                    document.getElementById("currentAnnouncementImage").style.display = "block";
+                    document.getElementById("noImageText").style.display = "none";
+                } else {
+                    document.getElementById("currentAnnouncementImage").style.display = "none";
+                    document.getElementById("noImageText").style.display = "block";
+                }
+            });
+        });
+
+        // Handle Add Announcement Form Submit
+        document.getElementById("announcementForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch("{% url 'lgu_admin:add_announcement' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                credentials: "same-origin",
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ " + data.message);
+                    location.reload();
+                } else {
+                    alert("❌ Error adding announcement: " + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("❌ An error occurred while posting the announcement.");
+            });
+        });
+
+        // Handle Update Announcement Form Submit
+        document.getElementById("updateAnnouncementForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const announcementId = document.getElementById("announcementId").value;
+        
+            fetch("{% url 'lgu_admin:update_announcement' 0 %}".replace("0", announcementId), {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                credentials: "same-origin",
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ " + data.message);
+                    location.reload();
+                } else {
+                    alert("❌ Error updating announcement: " + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("❌ An error occurred while updating the announcement.");
+            });
+        });
+
+        // Handle Delete Announcement
+        document.querySelectorAll(".delete-announcement").forEach(btn => {
+            btn.addEventListener("click", function(e) {
+                e.preventDefault();
+                const announcementId = this.getAttribute("data-announcement-id");
+    
+                if (confirm("⚠️ Are you sure you want to delete this announcement? This action cannot be undone.")) {
+                    fetch("{% url 'lgu_admin:delete_announcement' 0 %}".replace("0", announcementId), {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                        },
+                        credentials: "same-origin",
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("✅ " + data.message);
+                            location.reload();
+                        } else {
+                            alert("❌ Error deleting announcement: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("❌ An error occurred while deleting the announcement.");
+                    });
+                }
+            });
+        });
+    });   
+</script>
+{% endblock %}

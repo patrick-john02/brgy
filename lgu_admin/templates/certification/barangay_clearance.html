@@ -141,12 +141,13 @@
                 <p>
                     This certificate is issued upon the request of the above-named individual for <b>{{ reason_for_request }}</b>.
                 </p>
-                <p>
+                {% comment %} <p>
                     Issued this <select id="day"></select> <select id="month"></select> <select id="year"></select> in Barangay Bangad, Santa Maria, Isabela.
-                </p>
-                <p id="issued_date_text" style="display: none;">
-                    Issued this day <span id="selected_date"></span> in Barangay Bangad, Santa Maria, Isabela.
-                </p>
+                </p> {% endcomment %}
+                <p id="issued_date_text">
+    Issued this day <span id="selected_date"></span> in Barangay Bangad, Santa Maria, Isabela.
+</p>
+
             </div>
             <div class="signature">
                 <p><b>Hon. MEL L. MANGUZ</b></p>

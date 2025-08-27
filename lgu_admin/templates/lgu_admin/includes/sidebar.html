@@ -80,6 +80,21 @@
                     <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li> {% endcomment %}
                 </ul>
             </li>
+
+              <li class="nav-label">Reports & Annountments</li>
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                        class="icon icon-single-copy-06"></i><span class="nav-text">Citizen's Reports</span></a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url "lgu_admin:complaints"%}">Reports </a></li>
+                    {% comment %} <li><a href="{% url 'lgu_admin:project'%}">Programs</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li> {% endcomment %}
+                </ul>
+                 <ul aria-expanded="false">
+                    <li><a href="{% url "lgu_admin:announcements"%}">Announcements </a></li>
+                    {% comment %} <li><a href="{% url 'lgu_admin:project'%}">Programs</a></li>
+                    <li><a href="{% url 'lgu_admin:official'%}">Officials</a></li> {% endcomment %}
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
