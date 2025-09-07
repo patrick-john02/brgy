@@ -26,10 +26,10 @@ db.sqlite3
 *.sqlite3
 
 # Ignore static and media files (optional)
-staticfiles/
-media/
-static/
-mediafiles/
+# staticfiles/
+# media/
+# static/
+# mediafiles/
 
 # Ignore migrations (optional, but recommended to keep tracked migrations)
 **/migrations/*.py
